@@ -13,3 +13,10 @@ html,body{
     background-repeat: no-repeat;
     background-size: cover;
 }
+.modal {
+  /*   max-height: 90%; */
+}
+.modal { 
+    width: 40% !important ; 
+    height: 60vh !important ;
+} 

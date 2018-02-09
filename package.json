@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "css-loader": "^0.28.9",
+    "react-cookies": "^0.1.0",
     "react-router-dom": "^4.2.2",
     "style-loader": "^0.20.1"
   },

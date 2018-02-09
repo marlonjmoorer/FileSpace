@@ -1,7 +1,7 @@
 import json
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response,session
 import re
-
+from .models.UserModel import UserModel
 
 user_api= Blueprint('user', __name__)
 
@@ -9,8 +9,6 @@ email_regex='^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4}
 
 @user_api.route("/signup", methods=['POST'])
 def signup():
-    from .models.UserModel import UserModel
-
     errorMessages=[]
     form = request.form
     email= form["email"]
@@ -37,9 +35,36 @@ def signup():
     else:
         newUser=UserModel()
         newUser.email=email
-        newUser.password=password
+        newUser.set_password(password)
+
         if newUser.save():
           return json.dumps({"success":True})
+
+@user_api.route("/login", methods=['POST'])
+def login():
+    id=request.cookies.get('id')
+    errorMessages = []
+    form = request.form
+    email = form["email"]
+    password = form["password"]
+
+    user=UserModel.getByEmail(email)
+    if not UserModel.getByEmail(email):
+        errorMessages.append("User does not exist")
+    elif not user.check_password(password):
+        errorMessages.append("Invalid credentials")
+
+
+    if not errorMessages:
+       response= make_response(json.dumps({"success": True}))
+       response.set_cookie("id",str(user.id))
+       session["user"]=user
+       return response
+    else:
+
+        return  make_response(json.dumps({"errors": errorMessages}), 500)
+
+
 
 
 

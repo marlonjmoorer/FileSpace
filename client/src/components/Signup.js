@@ -12,6 +12,9 @@ export default class Signup extends Component {
         try{
             var res= await axios.post("api/user/signup",data)
             console.log(res)
+            document.querySelectorAll("form").forEach(form=>
+                form.reset()
+            )
             this.setState({messages:[]})
         }catch(error){
           var {response}=error
@@ -24,7 +27,7 @@ export default class Signup extends Component {
     render() {
         return (
             <div className="row card">
-                <form onSubmit={this.onSubmit} className="col card-content s12" >
+                <form id="signInForm" onSubmit={this.onSubmit} className="col card-content s12" >
                 <span className="card-title">Signup</span>
                     <ul>
                         {this.state.messages.map(e=>
