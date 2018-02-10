@@ -1,7 +1,6 @@
 import React from 'react'
 
 const ProfileModal = ({onSubmit, modalId,errors}) => {
-    console.log(errors)
     return (
 
         <div id={modalId} className="modal">

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import axios from 'axios'
 import ProfileModal from './ProfileModal'
-import Folder from './Folder';
+
 
 class SideBar extends Component {
 
@@ -14,11 +14,23 @@ class SideBar extends Component {
         errors:[]
     }
     componentDidMount(){
+       
         $(`#${this.state.modalId}`).modal({
             complete:()=>{
                this.setState({errors:[]})
             }
         });
+        console.log(this)
+    }
+    componentDidUpdate(prevProps, prevState) {
+        
+       const {profiles,profile}=this.props
+      if(!profile.id&&profiles.length > 0){
+        
+          this.select.value=profiles[0].id
+          this.props.onSelect(profiles[0].id)
+         
+      } 
     }
 
     addProfile = async(e) => {
@@ -29,7 +41,7 @@ class SideBar extends Component {
         }
         try {
             let response = await axios.post("/api/profile/addProfile", form)
-            console.log(response.data)
+
             if (response.data.success) {
                 this.props.loadProfiles()
                 this.setState({errors:[]})
@@ -65,7 +77,7 @@ class SideBar extends Component {
                 </div>
                 <div className="row">
                     <label>Profile</label>
-                    <select onChange={this.props.onSelect} className="browser-default">
+                    <select ref={(i)=>{this.select=i}} onChange={e=>this.props.onSelect(e.target.value)} className="browser-default">
                         <option value=""  defaultValue>Choose your option</option>
                         {profiles && profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>)}
                     </select>
@@ -75,7 +87,7 @@ class SideBar extends Component {
                     <i className="material-icons left">add</i>Add Profile</a>
                 </div>
                 <div className="row">
-                    <Folder profile={profile}/>
+                    
                 </div>
             </div>
         )

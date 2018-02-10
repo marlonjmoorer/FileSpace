@@ -9,17 +9,19 @@ const Home = (props) => {
         return <Redirect to="/dashboard"/>
     }
     return (
-        
+        <div className="container">
             <div className="row" style={{
                 marginTop:'50px'
             }} >
-                <div className="col s6">
+                <div className="col s5">
                    <Login {...props}/>
                 </div>
-                <div className="col s6">
+                <div className="col s5  push-s1">
                     <Signup/>
                 </div>
             </div>
+        </div>
+            
     );
 }
 

@@ -26,3 +26,10 @@ html,body{
     overflow: scroll;
     padding: 5px;
 }
+.explorer{
+    max-height:300px;
+    overflow: scroll;
+}
+.explorer > .collection{
+    margin-bottom: 0%
+}

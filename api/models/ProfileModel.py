@@ -2,8 +2,7 @@ from shared import  db
 from . import  BaseModel
 from werkzeug.security import  generate_password_hash, check_password_hash
 from sqlalchemy import Integer, ForeignKey, String, Column
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from pysftp import  Connection
 
 class ProfileModel(BaseModel):
     __tablename__ = 'Profile'
@@ -29,3 +28,10 @@ class ProfileModel(BaseModel):
     @staticmethod
     def getProfilesForUser(userId):
         return ProfileModel.query.filter_by(userId=userId).all()
+
+    def connect(self):
+
+       return Connection(self.host,
+                               username=self.username,
+                               password=self.password,
+                               port=int(self.port))

@@ -1,5 +1,5 @@
 from flask import Blueprint,request,Response,session,jsonify
-import pysftp
+import os
 from  util import  login_required
 from models.ProfileModel import ProfileModel
 profile_api= Blueprint("profile",__name__)
@@ -9,7 +9,7 @@ profile_api= Blueprint("profile",__name__)
 @login_required
 def add():
     userId=session["userId"]
-    testConnection= request.args.get('test')
+
     name= request.form["name"]
     host=request.form["host"]
     port=request.form["port"] or 22
@@ -68,24 +68,50 @@ def getProfile(id):
         return jsonify("Invalid profile"),500
 
     try:
-        with pysftp.Connection(profile.host,
-                               username=profile.username,
-                               password=profile.password,
-                               port=int(profile.port)) as sftp:
 
-            files=[]
-            sftp.cwd(".")
-            dir=sftp.getcwd()
-            list = sftp.listdir(dir)
-            for item in list:
-                files.append({
-                    'name': item,
-                    'isFile': sftp.isfile(item),
-                    # 'stat':sftp.stat(item)
-                })
+        sftp=profile.connect()
+        files=[]
+        sftp.cwd(".")
+        dir=sftp.getcwd()
+        list = sftp.listdir(dir)
+        for item in list:
+            files.append({
+                'name': item,
+                'isFile': sftp.isfile(item),
+                # 'stat':sftp.stat(item)
+            })
 
-            return jsonify({'profile':{'name':profile.name,'dirname':dir,"files":files}})
+        return jsonify({'profile':{"id":profile.id,'name':profile.name,'dirname':dir,"files":files}})
     except Exception as ex:
         return Response(False)
 
-    return jsonify({})
+@profile_api.route("/openFolder")
+@login_required
+def openFolder():
+
+    path=request.args["path"]
+
+    id=request.args["id"]
+    userId = session["userId"]
+    profile=ProfileModel.getById(id)
+    if profile.userId!=userId:
+        return jsonify("Invalid profile"),500
+    try:
+
+
+        sftp=profile.connect()
+        files=[]
+        sftp.cwd(path)
+        dir=sftp.getcwd()
+        list = sftp.listdir(dir)
+        for item in list:
+            files.append({
+                'name': item,
+                'isFile': sftp.isfile(item),
+                # 'stat':sftp.stat(item)
+            })
+
+        return jsonify({'dirname':dir,"files":files})
+    except Exception as ex:
+        return Response(False)
+
