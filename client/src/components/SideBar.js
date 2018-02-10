@@ -1,45 +1,58 @@
 import React, {Component} from 'react'
+import axios from 'axios'
+import ProfileModal from './ProfileModal'
+import Folder from './Folder';
 
-const SideBar= ({onSelect, profiles,addProfile})=>{
+class SideBar extends Component {
+
+    constructor(props){
+        super(props)
+    }
+
+    state={
+        modalId:"addModal",
+        errors:[]
+    }
+    componentDidMount(){
+        $(`#${this.state.modalId}`).modal({
+            complete:()=>{
+               this.setState({errors:[]})
+            }
+        });
+    }
+
+    addProfile = async(e) => {
+        e.preventDefault();
+        let form = new FormData(e.target)
+        for (var pair of form.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
+        }
+        try {
+            let response = await axios.post("/api/profile/addProfile", form)
+            console.log(response.data)
+            if (response.data.success) {
+                this.props.loadProfiles()
+                this.setState({errors:[]})
+                $(`#${this.state.modalId}`).modal('close');
+            }
+        } catch (error) {
+
+            console.log(error)
+            if(error.response){
+                console.log(error.response.data)
+                this.setState({errors:error.response.data.messages})
+            }
+        }
+       
         
-       return (
+
+
+    }
+    render() {
+        const {profiles,profile}=this.props
+        return (
             <div>
-                <div id="addModal" className="modal">
-                    <div className="modal-content">
-                        <h4>Modal Header</h4>
-                        <p></p>
-                        <form onSubmit={addProfile} className="col s12">
-                            <div className="row">
-                                <div className="input-field col s10">
-                                    <input name='host' id="host" type="text" className="validate"/>
-                                    <label htmlFor="host">Host</label>
-                                </div>
-                                <div className="input-field col s2">
-                                    <input name='port' id="port" type="text" className="validate"/>
-                                    <label htmlFor="port">Port</label>
-                                </div>
-                            </div>
-                             <div className="row">
-                                <div className="input-field col s6">
-                                    <input name="username" id="username" type="text" className="validate"/>
-                                    <label htmlFor="username">Username</label>
-                                </div>
-                               
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s6">
-                                    <input name="password" id="password" type="password" className="validate"/>
-                                    <label htmlFor="password">Password</label>
-                                </div>
-                            </div>
-                            <button   name="queue" value="Queue item" type="submit"  className="waves-effect  btn">Test Connection</button> <span>&nbsp;</span>
-                            <button type="submit" className="waves-effect  btn ">Save</button>
-                        </form>
-                    </div>
-                    <div className="modal-footer">
-                       
-                    </div>
-                </div>
+               <ProfileModal onSubmit={this.addProfile} errors={this.state.errors} modalId={this.state.modalId}/>
                 <div className="row">
                     <div className="col s12 center-align">
                         <img
@@ -52,31 +65,22 @@ const SideBar= ({onSelect, profiles,addProfile})=>{
                 </div>
                 <div className="row">
                     <label>Profile</label>
-                    <select onChange={onSelect} className="browser-default">
-                        <option value="" disabled defaultValue >Choose your option</option>
-                       {profiles&& profiles.map(pr=>
-                        <option key={pr} value="">{pr}</option>
-                        )}
+                    <select onChange={this.props.onSelect} className="browser-default">
+                        <option value=""  defaultValue>Choose your option</option>
+                        {profiles && profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>)}
                     </select>
                 </div>
                 <div className="row">
-                   <a className="waves-effect waves-light btn modal-trigger" href="#addModal"><i className="material-icons left">add</i>Add Profile</a>
+                    <a className="waves-effect waves-light btn modal-trigger" data-target={`${this.state.modalId}`}>
+                    <i className="material-icons left">add</i>Add Profile</a>
                 </div>
                 <div className="row">
-
-                    <div className="card ">
-                        <div className="card-content white-text">
-                            <span className="card-title">Card e</span>
-                            <p>I am a very simple card. I am good at containing small bits of information. I
-                                am convenient because I require little markup to use effectively.</p>
-                        </div>
-                        <div className="card-action">
-                            <a href="#">This is a link</a>
-                            <a href="#">This is a link</a>
-                        </div>
-                    </div>
+                    <Folder profile={profile}/>
                 </div>
             </div>
         )
+
     }
- export default SideBar
+
+}
+export default SideBar

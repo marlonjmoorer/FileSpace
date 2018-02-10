@@ -1,4 +1,4 @@
-from flask import Blueprint,request,Response,session
+from flask import Blueprint,request,Response,session,jsonify
 import pysftp
 from  util import  login_required
 from models.ProfileModel import ProfileModel
@@ -8,27 +8,84 @@ profile_api= Blueprint("profile",__name__)
 @profile_api.route("/addProfile",methods=['POST'])
 @login_required
 def add():
-    user=session["user"]
+    userId=session["userId"]
     testConnection= request.args.get('test')
+    name= request.form["name"]
     host=request.form["host"]
     port=request.form["port"] or 22
     username=request.form["username"]
     password=request.form["password"]
 
+    errorMessages=[]
 
+    if not name:
+        errorMessages.append("Name is required")
+    if not host:
+        errorMessages.append("Host is required")
+    if not username:
+        errorMessages.append("Username is required")
+    elif len(password)<6:
+        errorMessages.append("Username must be at least 6 characters")
+    if not password:
+        errorMessages.append("Password is required")
+    elif len(password)<8:
+        errorMessages.append("Password must be at least 8 characters")
 
-    if testConnection:
-        try:
-            with pysftp.Connection(host, username=username, password=password,port=port) as sftp:
-                if sftp:
-                    return Response(True)
-        except Exception as ex:
-            return Response(False)
-
-    profile=ProfileModel(host,port,username,password)
-    profile.userId=user.id
-    if profile.save():
-        return  Response("Profile saved"),200
+    if errorMessages:
+        return jsonify({"messages":errorMessages}),500
     else:
-        return Response("Profile not saved saved"), 500
+        profile = ProfileModel(name,host, port, username, password)
+        profile.userId = userId
+        if profile.save():
+            return jsonify({"success": True}), 200
+        else:
+            return jsonify("Profile not saved"), 500
 
+
+
+
+
+
+
+
+
+
+
+@profile_api.route("/getProfiles")
+@login_required
+def getProfiles():
+    userId = session["userId"]
+    profiles=ProfileModel.getProfilesForUser(userId)
+    result=[{'name':p.name,'id':p.id} for p in profiles]
+    return jsonify(result)
+
+@profile_api.route("/getProfile/<id>")
+@login_required
+def getProfile(id):
+    userId = session["userId"]
+    profile=ProfileModel.getById(id)
+    if profile.userId!=userId:
+        return jsonify("Invalid profile"),500
+
+    try:
+        with pysftp.Connection(profile.host,
+                               username=profile.username,
+                               password=profile.password,
+                               port=int(profile.port)) as sftp:
+
+            files=[]
+            sftp.cwd(".")
+            dir=sftp.getcwd()
+            list = sftp.listdir(dir)
+            for item in list:
+                files.append({
+                    'name': item,
+                    'isFile': sftp.isfile(item),
+                    # 'stat':sftp.stat(item)
+                })
+
+            return jsonify({'profile':{'name':profile.name,'dirname':dir,"files":files}})
+    except Exception as ex:
+        return Response(False)
+
+    return jsonify({})

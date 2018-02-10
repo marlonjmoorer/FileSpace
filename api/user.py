@@ -58,7 +58,7 @@ def login():
     if not errorMessages:
        response= make_response(json.dumps({"success": True}))
        response.set_cookie("id",str(user.id))
-       session["user"]=user
+       session["userId"]=user.id
        return response
     else:
 

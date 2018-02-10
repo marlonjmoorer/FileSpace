@@ -18,5 +18,11 @@ html,body{
 }
 .modal { 
     width: 40% !important ; 
-    height: 60vh !important ;
+    height: 85vh !important ;
 } 
+
+.collapsible-body{
+    max-height: 40vh;
+    overflow: scroll;
+    padding: 5px;
+}

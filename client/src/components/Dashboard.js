@@ -6,29 +6,46 @@ import SideBar from './SideBar';
 class  Dashboard extends Component {
 
     state={
-        profile:{a:"b"},
-        profiles:[1,2,3]
+        profile:{},
+        profiles:[],
+        currentDir:null
     }
-    selectProfile=(e)=>{
-        alert(e.target.value)
-    }
-    addProfile=async(e)=>{
-        e.preventDefault();
-        let form= new FormData(e.target)
-        for (var pair of form.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
+    selectProfile=async(e)=>{
+        const id=e.target.value
+        if(id){
+            try {
+                let res= await axios.get(`/api/profile/getProfile/${id}`)
+                if(res.data){
+                    let{profile}=res.data
+                    this.setState({profile,currentDir:profile.dirname})
+                }
+            } catch (error) {
+                console.log(error)
+            }
         }
-        let response=await axios.post("/api/profile/addProfile",form)
-        let {profile}=response.data
-        this.setState({profiles:[...this.state.profiles,profile]})
-        $('.modal').modal('close');
+    
+    }
+    loadProfiles=async()=>{
+        try {
+            let res= await axios.get("/api/profile/getProfiles")
+            if(res.data){
+                console.log(res.data)
+                this.setState({profiles:res.data})
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    componentDidMount() {
+        this.loadProfiles()
     }
 
    render(){
         return (
             <div className="row" style={{ marginBottom: 0}}>
                 <div className="col s3 black" style={{height: '89vh'}}>
-                    <SideBar {...this.state} addProfile={this.addProfile} onSelect={this.selectProfile}/>
+                    <SideBar {...this.state}  loadProfiles={this.loadProfiles} onSelect={this.selectProfile}/>
                 </div>
                 <div className="col s9">
                     <div className="card blue-grey darken-1">
