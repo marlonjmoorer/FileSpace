@@ -1,24 +1,14 @@
 import React from 'react'
 import { fail } from 'assert';
+import File from './File';
+import Folder from './Folder';
+import FileDetailModal from './FileDetailModal';
 
-let fileCompare = (a, b) => {
-    if (a.isFile == b.isFile) {
-        if (a.name < b.name) 
-            return -1;
-        if (a.name > b.name) 
-            return 1;
-        }
-    else if (a.isFile && !b.isFile) {
-        return 1;
-    } else {
-        return -1;
-    }
-    // a must be equal to b
-    return 0;
-}
+
 const Explorer = ({profile, cwd, openFolder}) => {
-    
+    const modalId="detail"
     let segments= cwd? cwd.split("/"):[]
+    
     const traverse=(folder,ascend)=>{
         let index=segments.indexOf(folder)+1
         let path
@@ -27,9 +17,6 @@ const Explorer = ({profile, cwd, openFolder}) => {
         }else{
             path=segments.concat(folder).join("/")
         }
-        console.log(segments)
-        console.log(path)
-        console.log(index)
         openFolder(path)
     }
     const mapPath=(seg,i) =>{
@@ -47,6 +34,7 @@ const Explorer = ({profile, cwd, openFolder}) => {
     }
     return (
         <div>
+            <FileDetailModal modalId={modalId} />
             <div className="card teal darken-1">
                 <div className="card-content white-text">
                 <button className="btn">Up</button>
@@ -58,25 +46,11 @@ const Explorer = ({profile, cwd, openFolder}) => {
                             {profile.files && profile
                                 .files
                                 .sort(fileCompare)
-                                .map(file => <a
-                                    href="#!"
-                                    onClick={(e) => {
-                                    if(!file.isFile){
-                                        traverse(file.name)
-                                    }else{
-
-                                    }
-                                    
-                                }}
-                                    key={file.name}
-                                    className="collection-item">
-                                    <span className="title">{file.name}</span>
-                                    <div className="secondary-content">
-                                        <i className="material-icons">{file.isFile
-                                                ? ""
-                                                : "folder"}</i>
-                                    </div>
-                                </a>)}
+                                .map(item => 
+                                   item.isFile?
+                                   <File onClick={()=>''} file={item}  />: 
+                                   <Folder onClick={()=>{traverse(item.name)}} folder={item}/>
+                                )}
                         </div>
                     </div>
 
@@ -88,6 +62,20 @@ const Explorer = ({profile, cwd, openFolder}) => {
 
         </div>
     )
+}
+
+let fileCompare = (a, b) => {
+    if (a.isFile == b.isFile) {
+        if (a.name < b.name) 
+            return -1;
+        if (a.name > b.name) 
+            return 1;
+        }
+    else if (a.isFile && !b.isFile) {
+        return 1;
+    } else {
+        return -1;
+    }
 }
 
 export default Explorer;

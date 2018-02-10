@@ -15486,24 +15486,19 @@ const ProfileModal = ({ onSubmit, modalId, errors }) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_assert__ = __webpack_require__(119);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_assert___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_assert__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__File__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Folder__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileDetailModal__ = __webpack_require__(125);
 
 
 
-let fileCompare = (a, b) => {
-    if (a.isFile == b.isFile) {
-        if (a.name < b.name) return -1;
-        if (a.name > b.name) return 1;
-    } else if (a.isFile && !b.isFile) {
-        return 1;
-    } else {
-        return -1;
-    }
-    // a must be equal to b
-    return 0;
-};
+
+
+
 const Explorer = ({ profile, cwd, openFolder }) => {
-
+    const modalId = "detail";
     let segments = cwd ? cwd.split("/") : [];
+
     const traverse = (folder, ascend) => {
         let index = segments.indexOf(folder) + 1;
         let path;
@@ -15512,9 +15507,6 @@ const Explorer = ({ profile, cwd, openFolder }) => {
         } else {
             path = segments.concat(folder).join("/");
         }
-        console.log(segments);
-        console.log(path);
-        console.log(index);
         openFolder(path);
     };
     const mapPath = (seg, i) => {
@@ -15540,6 +15532,7 @@ const Explorer = ({ profile, cwd, openFolder }) => {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__FileDetailModal__["a" /* default */], { modalId: modalId }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'card teal darken-1' },
@@ -15562,38 +15555,26 @@ const Explorer = ({ profile, cwd, openFolder }) => {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'collection' },
-                        profile.files && profile.files.sort(fileCompare).map(file => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'a',
-                            {
-                                href: '#!',
-                                onClick: e => {
-                                    if (!file.isFile) {
-                                        traverse(file.name);
-                                    } else {}
-                                },
-                                key: file.name,
-                                className: 'collection-item' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'span',
-                                { className: 'title' },
-                                file.name
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'secondary-content' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'i',
-                                    { className: 'material-icons' },
-                                    file.isFile ? "" : "folder"
-                                )
-                            )
-                        ))
+                        profile.files && profile.files.sort(fileCompare).map(item => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__File__["a" /* default */], { onClick: () => '', file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Folder__["a" /* default */], { onClick: () => {
+                                traverse(item.name);
+                            }, folder: item }))
                     )
                 )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'card-action' })
         )
     );
+};
+
+let fileCompare = (a, b) => {
+    if (a.isFile == b.isFile) {
+        if (a.name < b.name) return -1;
+        if (a.name > b.name) return 1;
+    } else if (a.isFile && !b.isFile) {
+        return 1;
+    } else {
+        return -1;
+    }
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (Explorer);
@@ -17302,6 +17283,105 @@ if (typeof Object.create === 'function') {
     ctor.prototype.constructor = ctor;
   };
 }
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+
+const File = ({ file, onClick }) => {
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "a",
+        { className: "collection-item" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "span",
+            { className: "title" },
+            file.name
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "div",
+            { className: "secondary-content" },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                "i",
+                { className: "material-icons" },
+                "insert_drive_file"
+            )
+        )
+    );
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (File);
+
+/***/ }),
+/* 124 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+
+
+const Folder = ({ folder, onClick }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "a",
+    { className: "collection-item", onClick: onClick },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "span",
+        { className: "title" },
+        folder.name
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "secondary-content" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "i",
+            { className: "material-icons" },
+            "folder"
+        )
+    )
+);
+
+/* harmony default export */ __webpack_exports__["a"] = (Folder);
+
+/***/ }),
+/* 125 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+
+const FileDetailModal = ({ modalId }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "div",
+    { id: modalId, "class": "modal" },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { "class": "modal-content" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "h4",
+            null,
+            "Modal Header"
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "p",
+            null,
+            "A bunch of text"
+        )
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { "class": "modal-footer" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "a",
+            { href: "#!", "class": "modal-action modal-close waves-effect waves-green btn-flat" },
+            "Agree"
+        )
+    )
+);
+
+/* harmony default export */ __webpack_exports__["a"] = (FileDetailModal);
 
 /***/ })
 /******/ ]);
