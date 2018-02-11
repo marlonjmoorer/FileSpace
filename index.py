@@ -40,7 +40,7 @@ from api.profile import profile_api
 app.register_blueprint(user_api,url_prefix='/api/user')
 app.register_blueprint(profile_api,url_prefix='/api/profile')
 
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 
 

@@ -17,8 +17,8 @@ html,body{
   /*   max-height: 90%; */
 }
 #addModal.modal { 
-    width: 40% !important ; 
-    height: 85vh !important ;
+    width: 70% !important ; 
+    height: 95vh !important ;
 } 
 
 .collapsible-body{

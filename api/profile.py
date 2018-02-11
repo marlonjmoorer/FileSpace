@@ -76,7 +76,7 @@ def getProfile():
                     # 'stat':sftp.stat(item)
                 })
 
-            return jsonify({'profile':{"id":profile.id,'name':profile.name,'dirname':dir,"files":files}})
+            return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir,"files":files}})
         except Exception as ex:
             return Response(False)
     else:

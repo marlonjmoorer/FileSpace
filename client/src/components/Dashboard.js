@@ -9,8 +9,7 @@ class  Dashboard extends Component {
 
     state={
         profile:{},
-        profiles:[],
-        cwd:null
+        profiles:[]
     }
     selectProfile=async(id)=>{
         if(id){
@@ -18,51 +17,15 @@ class  Dashboard extends Component {
                 let res= await axios.get(`/api/profile/getProfile`,{params:{id}})
                 if(res.data){
                     let{profile}=res.data
-                    this.setState({profile,cwd:profile.dirname})
+                    this.setState({profile})
                 }
             } catch (error) {
                 console.log(error)
             }
         }
     }
-    openFile=async(path)=>{
-        if(path){
-            let data={
-                path,
-                id:this.state.profile.id
-            }
-            try {
-                let res= await axios.get(`/api/profile/fileDetail`,{params:data})
-                if(res.data){
-                  let fileInfo=res.data
-                  this.setState({fileInfo})
-                  
-                } 
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
-    openFolder=async(path)=>{
-
-        if(path){
-            let data={
-                path,
-                id:this.state.profile.id
-            }
-            try {
-                let res= await axios.get(`/api/profile/openFolder`,{params:data})
-                if(res.data){
-                    let{dirname,files}=res.data
-                    let profile= {...this.state.profile}
-                    profile.files=files
-                    this.setState({profile,cwd:dirname})
-                } 
-            } catch (error) {
-                console.log(error)
-            }
-        }
-    }
+   
+    
 
     loadProfiles=async()=>{
         try {

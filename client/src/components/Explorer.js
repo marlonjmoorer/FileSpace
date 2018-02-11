@@ -8,17 +8,28 @@ class Explorer extends Component {
     constructor(props) {
         super(props);
         this.modalId='detail'
+        let {profile}=props
+        
         this.state = {
-            segments:props.cwd? props.cwd.split("/"):[],
-           
+            cwd:"",
+           // segments:[]
         };
     }
+    get segments(){
+       return this.state.cwd? this.state.cwd.split("/"):[]
+    }
     componentWillReceiveProps = (nextProps) => {
-        if(nextProps.cwd!= this.props.cwd){
-            this.setState({segments: nextProps.cwd.split("/")})
+
+        if(nextProps.profile!=this.props.profile){
+
+            this.setState({
+                cwd:nextProps.profile.homeDir,
+                files:nextProps.profile.files
+            })
         }
         
     }
+
     
     componentDidMount() {
         $(`#${this.modalId}`).modal();
@@ -44,17 +55,34 @@ class Explorer extends Component {
             }
         }
     }
+    openFolder=async(path)=>{
 
+        if(path){
+            let data={
+                path,
+                id:this.props.profile.id
+            }
+            try {
+                let res= await axios.get(`/api/profile/openFolder`,{params:data})
+                if(res.data){
+                    let{dirname,files}=res.data
+                    this.setState({files,cwd:dirname})
+                } 
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
     traverse=(folder,ascend)=>{
         
-        let index=this.state.segments.indexOf(folder)+1
+        let index=this.segments.indexOf(folder)+1
         let path
         if(index&&ascend){
-            path=this.state.segments.slice(0,index).join("/")            
+            path=this.segments.slice(0,index).join("/")            
         }else{
-            path=this.state.segments.concat(folder).join("/")
+            path=this.segments.concat(folder).join("/")
         }
-        this.props.openFolder(path)
+        this.openFolder(path)
     }
     mapPath=(seg,i) =>{
         if(!seg){
@@ -70,21 +98,20 @@ class Explorer extends Component {
         </a>)
     }
     render(){
-        let {openFolder,profile,cwd}= this.props
-        let {segments,fileInfo}=this.state
+        let {openFolder,profile}= this.props
+        let {fileInfo,files,cwd}=this.state
         return (
             <div>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
-                <div className="card teal darken-1">
+                <div className="card purple darken-1">
                     <div className="card-content white-text">
-                    <button className="btn">Up</button>
+                    <button className="btn">   <i className="material-icons left">cloud_upload</i>Upload</button>
                         <span className="card-title">
-                            {segments&& segments.map(this.mapPath)}
+                            {this.segments&& this.segments.map(this.mapPath)}
                         </span>
                         <div className="explorer teal">
                             <div className="collection">
-                                {profile.files && profile
-                                    .files
+                                {files && files
                                     .sort(fileCompare)
                                     .map((item,i) => 
                                        item.isFile?

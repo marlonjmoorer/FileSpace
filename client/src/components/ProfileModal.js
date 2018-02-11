@@ -11,7 +11,7 @@ const ProfileModal = ({onSubmit, modalId,errors}) => {
                     )} 
                 </ul>
                
-                <h4>Modal Header</h4>
+                
                 <p></p>
                 <form onSubmit={onSubmit} className="col s12">
                     <div className="row">
@@ -32,14 +32,15 @@ const ProfileModal = ({onSubmit, modalId,errors}) => {
                         <div className="input-field col s6">
                             <input name="username" id="username" type="text" className="validate"/>
                             <label htmlFor="username">Username</label>
-                        </div>
-
-                    </div>
-                    <div className="row">
+                        </div> 
                         <div className="input-field col s6">
                             <input name="password" id="password" type="password" className="validate"/>
                             <label htmlFor="password">Password</label>
                         </div>
+
+                    </div>
+                    <div className="row">
+                       
                     </div>
                     <button
                         name="queue"
