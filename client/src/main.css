@@ -16,7 +16,7 @@ html,body{
 .modal {
   /*   max-height: 90%; */
 }
-.modal { 
+#addModal.modal { 
     width: 40% !important ; 
     height: 85vh !important ;
 } 

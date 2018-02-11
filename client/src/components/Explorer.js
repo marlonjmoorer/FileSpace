@@ -1,70 +1,111 @@
-import React from 'react'
-import { fail } from 'assert';
+import React,{Component} from 'react'
 import File from './File';
 import Folder from './Folder';
 import FileDetailModal from './FileDetailModal';
+import axios from 'axios';
 
-
-const Explorer = ({profile, cwd, openFolder,openFile,fileInfo}) => {
-    const modalId="detail"
-    let segments= cwd? cwd.split("/"):[]
+class Explorer extends Component {
+    constructor(props) {
+        super(props);
+        this.modalId='detail'
+        this.state = {
+            segments:props.cwd? props.cwd.split("/"):[],
+           
+        };
+    }
+    componentWillReceiveProps = (nextProps) => {
+        if(nextProps.cwd!= this.props.cwd){
+            this.setState({segments: nextProps.cwd.split("/")})
+        }
+        
+    }
     
-    const traverse=(folder,ascend)=>{
-        let index=segments.indexOf(folder)+1
+    componentDidMount() {
+        $(`#${this.modalId}`).modal();
+    }
+
+    openFile=async(path)=>{
+        if(path){
+            let data={
+                path,
+                id:this.props.profile.id
+            }
+            try {
+                let res= await axios.get(`/api/profile/fileDetail`,{params:data})
+                if(res.data){
+                  let fileInfo=res.data
+                  this.setState({fileInfo},()=>{
+                     $(`#${this.modalId}`).modal('open')
+                  })
+                  
+                } 
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    }
+
+    traverse=(folder,ascend)=>{
+        
+        let index=this.state.segments.indexOf(folder)+1
         let path
         if(index&&ascend){
-            path=segments.slice(0,index).join("/")            
+            path=this.state.segments.slice(0,index).join("/")            
         }else{
-            path=segments.concat(folder).join("/")
+            path=this.state.segments.concat(folder).join("/")
         }
-        openFolder(path)
+        this.props.openFolder(path)
     }
-   
-    const mapPath=(seg,i) =>{
+    mapPath=(seg,i) =>{
         if(!seg){
-            return  <span className="breadcrumb">
+            return  <span key={i} className="breadcrumb">
                 <i className="material-icons">home</i>
             </span>
         }                     
         return(
         <a key={i} href="#!" 
-            onClick={traverse.bind(this,seg,true)} 
+            onClick={this.traverse.bind(this,seg,true)} 
             className="breadcrumb">
             {seg}
         </a>)
     }
-    
-    return (
-        <div>
-           {fileInfo&& <FileDetailModal modalId={modalId} fileInfo={fileInfo} />}
-            <div className="card teal darken-1">
-                <div className="card-content white-text">
-                <button className="btn">Up</button>
-                    <span className="card-title">
-                        {segments&& segments.map(mapPath)}
-                    </span>
-                    <div className="explorer teal">
-                        <div className="collection">
-                            {profile.files && profile
-                                .files
-                                .sort(fileCompare)
-                                .map(item => 
-                                   item.isFile?
-                                   <File onClick={openFile.bind(this,`${cwd}/${item.name}`)} file={item}  />: 
-                                   <Folder onClick={traverse.bind(this,item.name)} folder={item}/>
-                                )}
+    render(){
+        let {openFolder,profile,cwd}= this.props
+        let {segments,fileInfo}=this.state
+        return (
+            <div>
+               <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
+                <div className="card teal darken-1">
+                    <div className="card-content white-text">
+                    <button className="btn">Up</button>
+                        <span className="card-title">
+                            {segments&& segments.map(this.mapPath)}
+                        </span>
+                        <div className="explorer teal">
+                            <div className="collection">
+                                {profile.files && profile
+                                    .files
+                                    .sort(fileCompare)
+                                    .map((item,i) => 
+                                       item.isFile?
+                                       <File key={i} onClick={this.openFile.bind(this,`${cwd}/${item.name}`)} file={item}  />: 
+                                       <Folder key={i} onClick={this.traverse.bind(this,item.name)} folder={item}/>
+                                    )}
+                            </div>
                         </div>
+    
                     </div>
-
+                    <div className="card-action">
+                        
+                    </div>
                 </div>
-                <div className="card-action">
-                    
-                </div>
+    
             </div>
-
-        </div>
-    )
+        )
+    }
 }
+
+
 
 let fileCompare = (a, b) => {
     if (a.isFile == b.isFile) {

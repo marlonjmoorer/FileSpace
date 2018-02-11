@@ -15,7 +15,7 @@ class  Dashboard extends Component {
     selectProfile=async(id)=>{
         if(id){
             try {
-                let res= await axios.get(`/api/profile/getProfile/${id}`)
+                let res= await axios.get(`/api/profile/getProfile`,{params:{id}})
                 if(res.data){
                     let{profile}=res.data
                     this.setState({profile,cwd:profile.dirname})
@@ -80,7 +80,7 @@ class  Dashboard extends Component {
     }
 
    render(){
-       console.log(this.state)
+      // console.log(this.state)
         return (
             <div className="row" style={{ marginBottom: 0}}>
                 <div className="col s3 black" style={{height: '89vh'}}>

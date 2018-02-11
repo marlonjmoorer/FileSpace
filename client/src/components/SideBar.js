@@ -20,7 +20,6 @@ class SideBar extends Component {
                this.setState({errors:[]})
             }
         });
-        console.log(this)
     }
     componentDidUpdate(prevProps, prevState) {
         
