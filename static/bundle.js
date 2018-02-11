@@ -15132,7 +15132,6 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             cwd: null
         }, this.selectProfile = (() => {
             var _ref = _asyncToGenerator(function* (id) {
-
                 if (id) {
                     try {
                         let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`/api/profile/getProfile/${id}`);
@@ -15149,8 +15148,30 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             return function (_x) {
                 return _ref.apply(this, arguments);
             };
-        })(), this.openFolder = (() => {
+        })(), this.openFile = (() => {
             var _ref2 = _asyncToGenerator(function* (path) {
+                if (path) {
+                    let data = {
+                        path,
+                        id: _this.state.profile.id
+                    };
+                    try {
+                        let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`/api/profile/fileDetail`, { params: data });
+                        if (res.data) {
+                            let fileInfo = res.data;
+                            _this.setState({ fileInfo });
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            });
+
+            return function (_x2) {
+                return _ref2.apply(this, arguments);
+            };
+        })(), this.openFolder = (() => {
+            var _ref3 = _asyncToGenerator(function* (path) {
 
                 if (path) {
                     let data = {
@@ -15171,8 +15192,8 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 }
             });
 
-            return function (_x2) {
-                return _ref2.apply(this, arguments);
+            return function (_x3) {
+                return _ref3.apply(this, arguments);
             };
         })(), this.loadProfiles = _asyncToGenerator(function* () {
             try {
@@ -15203,7 +15224,7 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'col s9' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Explorer__["a" /* default */], _extends({}, this.state, { openFolder: this.openFolder }))
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Explorer__["a" /* default */], _extends({}, this.state, { openFile: this.openFile, openFolder: this.openFolder }))
             )
         );
     }
@@ -15489,13 +15510,15 @@ const ProfileModal = ({ onSubmit, modalId, errors }) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__File__ = __webpack_require__(123);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Folder__ = __webpack_require__(124);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__FileDetailModal__ = __webpack_require__(125);
+var _this = this;
 
 
 
 
 
 
-const Explorer = ({ profile, cwd, openFolder }) => {
+
+const Explorer = ({ profile, cwd, openFolder, openFile, fileInfo }) => {
     const modalId = "detail";
     let segments = cwd ? cwd.split("/") : [];
 
@@ -15509,6 +15532,7 @@ const Explorer = ({ profile, cwd, openFolder }) => {
         }
         openFolder(path);
     };
+
     const mapPath = (seg, i) => {
         if (!seg) {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -15524,15 +15548,16 @@ const Explorer = ({ profile, cwd, openFolder }) => {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'a',
             { key: i, href: '#!',
-                onClick: () => traverse(seg, true),
+                onClick: traverse.bind(_this, seg, true),
                 className: 'breadcrumb' },
             seg
         );
     };
+
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__FileDetailModal__["a" /* default */], { modalId: modalId }),
+        fileInfo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__FileDetailModal__["a" /* default */], { modalId: modalId, fileInfo: fileInfo }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'card teal darken-1' },
@@ -15555,9 +15580,7 @@ const Explorer = ({ profile, cwd, openFolder }) => {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'collection' },
-                        profile.files && profile.files.sort(fileCompare).map(item => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__File__["a" /* default */], { onClick: () => '', file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Folder__["a" /* default */], { onClick: () => {
-                                traverse(item.name);
-                            }, folder: item }))
+                        profile.files && profile.files.sort(fileCompare).map(item => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__File__["a" /* default */], { onClick: openFile.bind(_this, `${cwd}/${item.name}`), file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Folder__["a" /* default */], { onClick: traverse.bind(_this, item.name), folder: item }))
                     )
                 )
             ),
@@ -17295,7 +17318,7 @@ if (typeof Object.create === 'function') {
 const File = ({ file, onClick }) => {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         "a",
-        { className: "collection-item" },
+        { className: "collection-item", onClick: onClick },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             "span",
             { className: "title" },
@@ -17353,9 +17376,9 @@ const Folder = ({ folder, onClick }) => __WEBPACK_IMPORTED_MODULE_0_react___defa
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
-const FileDetailModal = ({ modalId }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+const FileDetailModal = ({ modalId, fileInfo }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "div",
-    { id: modalId, "class": "modal" },
+    { id: modalId, "class": "modal open" },
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         "div",
         { "class": "modal-content" },
@@ -17367,7 +17390,7 @@ const FileDetailModal = ({ modalId }) => __WEBPACK_IMPORTED_MODULE_0_react___def
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             "p",
             null,
-            "A bunch of text"
+            fileInfo.name
         )
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(

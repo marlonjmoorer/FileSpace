@@ -1,7 +1,10 @@
+import datetime
 from flask import Blueprint,request,Response,session,jsonify
 import os
-from  util import  login_required
+from  util import  login_required ,format_bytes
 from models.ProfileModel import ProfileModel
+
+
 profile_api= Blueprint("profile",__name__)
 
 
@@ -115,3 +118,30 @@ def openFolder():
     except Exception as ex:
         return Response(False)
 
+
+@profile_api.route("/fileDetail")
+@login_required
+def getFileInfo():
+    path = request.args["path"]
+    id = request.args["id"]
+    userId = session["userId"]
+    profile = ProfileModel.getById(id)
+    if profile.userId != userId:
+        return jsonify("Invalid profile"), 500
+
+    try:
+
+        sftp = profile.connect()
+        stats=sftp.lstat(path)
+        created= datetime.datetime.fromtimestamp(stats.st_atime)
+        modified=datetime.datetime.fromtimestamp(stats.st_mtime)
+        n=path.split('/')[-1]
+        return jsonify({
+            "size":format_bytes(stats.st_size),
+            "created":created,
+            "last_modified":modified,
+            "path":path,
+            "name":path.split('/')[-1]
+        })
+    except Exception as ex:
+        return Response(False)

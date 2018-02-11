@@ -13,7 +13,6 @@ class  Dashboard extends Component {
         cwd:null
     }
     selectProfile=async(id)=>{
-       
         if(id){
             try {
                 let res= await axios.get(`/api/profile/getProfile/${id}`)
@@ -25,7 +24,24 @@ class  Dashboard extends Component {
                 console.log(error)
             }
         }
-    
+    }
+    openFile=async(path)=>{
+        if(path){
+            let data={
+                path,
+                id:this.state.profile.id
+            }
+            try {
+                let res= await axios.get(`/api/profile/fileDetail`,{params:data})
+                if(res.data){
+                  let fileInfo=res.data
+                  this.setState({fileInfo})
+                  
+                } 
+            } catch (error) {
+                console.log(error)
+            }
+        }
     }
     openFolder=async(path)=>{
 
@@ -71,7 +87,7 @@ class  Dashboard extends Component {
                     <SideBar {...this.state}  loadProfiles={this.loadProfiles} onSelect={this.selectProfile}/>
                 </div>
                 <div className="col s9">
-                    <Explorer {...this.state} openFolder={this.openFolder} />
+                    <Explorer {...this.state} openFile={this.openFile} openFolder={this.openFolder} />
                 </div>
             </div>
         );

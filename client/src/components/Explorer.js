@@ -5,7 +5,7 @@ import Folder from './Folder';
 import FileDetailModal from './FileDetailModal';
 
 
-const Explorer = ({profile, cwd, openFolder}) => {
+const Explorer = ({profile, cwd, openFolder,openFile,fileInfo}) => {
     const modalId="detail"
     let segments= cwd? cwd.split("/"):[]
     
@@ -19,6 +19,7 @@ const Explorer = ({profile, cwd, openFolder}) => {
         }
         openFolder(path)
     }
+   
     const mapPath=(seg,i) =>{
         if(!seg){
             return  <span className="breadcrumb">
@@ -27,14 +28,15 @@ const Explorer = ({profile, cwd, openFolder}) => {
         }                     
         return(
         <a key={i} href="#!" 
-            onClick={()=>traverse(seg,true)} 
+            onClick={traverse.bind(this,seg,true)} 
             className="breadcrumb">
-                {seg}
+            {seg}
         </a>)
     }
+    
     return (
         <div>
-            <FileDetailModal modalId={modalId} />
+           {fileInfo&& <FileDetailModal modalId={modalId} fileInfo={fileInfo} />}
             <div className="card teal darken-1">
                 <div className="card-content white-text">
                 <button className="btn">Up</button>
@@ -48,8 +50,8 @@ const Explorer = ({profile, cwd, openFolder}) => {
                                 .sort(fileCompare)
                                 .map(item => 
                                    item.isFile?
-                                   <File onClick={()=>''} file={item}  />: 
-                                   <Folder onClick={()=>{traverse(item.name)}} folder={item}/>
+                                   <File onClick={openFile.bind(this,`${cwd}/${item.name}`)} file={item}  />: 
+                                   <Folder onClick={traverse.bind(this,item.name)} folder={item}/>
                                 )}
                         </div>
                     </div>
