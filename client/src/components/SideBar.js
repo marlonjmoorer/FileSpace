@@ -11,7 +11,8 @@ class SideBar extends Component {
 
     state={
         modalId:"addModal",
-        errors:[]
+        errors:[],
+        profileId:''
     }
     componentDidMount(){
        
@@ -21,6 +22,12 @@ class SideBar extends Component {
             }
         });
     }
+
+    componentWillReceiveProps(nextProps) {
+       // this.s
+    }
+
+    
     componentDidUpdate(prevProps, prevState) {
         
        const {profiles,profile}=this.props

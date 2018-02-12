@@ -12,6 +12,7 @@ class  Dashboard extends Component {
         profiles:[]
     }
     selectProfile=async(id)=>{
+        console.log(id)
         if(id){
             try {
                 let res= await axios.get(`/api/profile/getProfile`,{params:{id}})

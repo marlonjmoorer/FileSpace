@@ -15131,6 +15131,7 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             profiles: []
         }, this.selectProfile = (() => {
             var _ref = _asyncToGenerator(function* (id) {
+                console.log(id);
                 if (id) {
                     try {
                         let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(`/api/profile/getProfile`, { params: { id } });
@@ -15208,7 +15209,8 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         _this = super(props);
         this.state = {
             modalId: "addModal",
-            errors: []
+            errors: [],
+            profileId: ''
         };
 
         this.addProfile = (() => {
@@ -15250,6 +15252,11 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             }
         });
     }
+
+    componentWillReceiveProps(nextProps) {
+        // this.s
+    }
+
     componentDidUpdate(prevProps, prevState) {
 
         const { profiles, profile } = this.props;
@@ -15453,7 +15460,9 @@ const ProfileModal = ({ onSubmit, modalId, errors }) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FileDetailModal__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__UploadModal__ = __webpack_require__(122);
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 
 
 
@@ -15562,12 +15571,26 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             );
         };
 
+        this.addFile = ({ files }) => {
+            console.log(files);
+            this.setState({ fileQueue: [...files, ...this.state.fileQueue] }, () => {
+                console.log(this.state.fileQueue);
+            });
+        };
+
+        this.removeFile = index => {
+            let { fileQueue } = this.state;
+            fileQueue.splice(index, 1);
+            this.setState({ fileQueue });
+        };
+
         this.modalId = 'detail';
+        this.uploadModalId = "upload";
         let { profile } = props;
 
         this.state = {
-            cwd: ""
-            // segments:[]
+            cwd: "",
+            fileQueue: []
         };
     }
     get segments() {
@@ -15577,6 +15600,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     componentDidMount() {
         $(`#${this.modalId}`).modal();
+        $(`#${this.uploadModalId}`).modal();
     }
 
     render() {
@@ -15585,6 +15609,11 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__UploadModal__["a" /* default */], {
+                modalId: this.uploadModalId,
+                fileQueue: this.state.fileQueue,
+                addFile: this.addFile,
+                removeFile: this.removeFile }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -15594,8 +15623,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                     { className: 'card-content white-text' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'button',
-                        { className: 'btn' },
-                        '   ',
+                        { className: 'btn modal-trigger', 'data-target': `${this.uploadModalId}` },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'i',
                             { className: 'material-icons left' },
@@ -16649,6 +16677,103 @@ module.exports = function (css) {
 	// send back the fixed css
 	return fixedCss;
 };
+
+/***/ }),
+/* 122 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+var _this = this;
+
+
+const UploadModal = ({ modalId, addFile, fileQueue, removeFile }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "div",
+    { id: modalId, className: "modal" },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "modal-content" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "h4",
+            null,
+            "Uploads"
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "table",
+            { className: "striped" },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                "tbody",
+                null,
+                fileQueue.map((file, i) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    "tr",
+                    { key: i },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        "td",
+                        null,
+                        file.name
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        "td",
+                        null,
+                        file.type
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        "td",
+                        null,
+                        formatFileSize(file.size)
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        "td",
+                        null,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            "a",
+                            { href: "#!", onClick: removeFile.bind(_this, i) },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                "i",
+                                { className: "material-icons right " },
+                                "delete"
+                            )
+                        )
+                    )
+                ))
+            )
+        )
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "modal-footer" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", { id: "file", onChange: e => addFile(e.target), type: "file", className: "hide" }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "label",
+            { htmlFor: "file", className: "btn" },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                "i",
+                { className: "material-icons left " },
+                "add"
+            ),
+            " Add "
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "button",
+            { className: fileQueue.length > 0 ? "btn" : "btn disabled" },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                "i",
+                { className: "material-icons left " },
+                "cloud_upload"
+            ),
+            " Upload "
+        )
+    )
+);
+const formatFileSize = (bytes, decimalPoint = 2) => {
+    if (bytes == 0) return '0 Bytes';
+    var k = 1000,
+        sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimalPoint)) + ' ' + sizes[i];
+};
+/* harmony default export */ __webpack_exports__["a"] = (UploadModal);
 
 /***/ })
 /******/ ]);

@@ -3,16 +3,18 @@ import File from './File';
 import Folder from './Folder';
 import FileDetailModal from './FileDetailModal';
 import axios from 'axios';
+import UploadModal from './UploadModal';
 
 class Explorer extends Component {
     constructor(props) {
         super(props);
         this.modalId='detail'
+        this.uploadModalId="upload"
         let {profile}=props
         
         this.state = {
             cwd:"",
-           // segments:[]
+            fileQueue:[]
         };
     }
     get segments(){
@@ -33,6 +35,7 @@ class Explorer extends Component {
     
     componentDidMount() {
         $(`#${this.modalId}`).modal();
+        $(`#${this.uploadModalId}`).modal();
     }
 
     openFile=async(path)=>{
@@ -97,15 +100,34 @@ class Explorer extends Component {
             {seg}
         </a>)
     }
+    addFile=({files})=>{
+        console.log(files)
+       this.setState({fileQueue:[...files,...this.state.fileQueue]},()=>{
+           console.log(this.state.fileQueue)
+       })
+    }
+    removeFile=(index)=>{
+        let {fileQueue}= this.state
+        fileQueue.splice(index,1)
+        this.setState({fileQueue})
+    }
     render(){
         let {openFolder,profile}= this.props
         let {fileInfo,files,cwd}=this.state
         return (
             <div>
+               <UploadModal 
+                        modalId={this.uploadModalId} 
+                        fileQueue={this.state.fileQueue}
+                        addFile={this.addFile}
+                        removeFile={this.removeFile} />
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
                 <div className="card purple darken-1">
                     <div className="card-content white-text">
-                    <button className="btn">   <i className="material-icons left">cloud_upload</i>Upload</button>
+                    
+                    <button className="btn modal-trigger" data-target={`${this.uploadModalId}`} >
+                       <i className="material-icons left">cloud_upload</i>Upload
+                    </button>
                         <span className="card-title">
                             {this.segments&& this.segments.map(this.mapPath)}
                         </span>
