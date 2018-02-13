@@ -15571,26 +15571,37 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             );
         };
 
-        this.addFile = ({ files }) => {
-            console.log(files);
-            this.setState({ fileQueue: [...files, ...this.state.fileQueue] }, () => {
-                console.log(this.state.fileQueue);
+        this.uploadFiles = (() => {
+            var _ref3 = _asyncToGenerator(function* (files) {
+                let params = {
+                    path: _this.state.cwd,
+                    id: _this.props.profile.id
+                };
+                const formData = new FormData();
+                files.forEach(function (file, i) {
+                    formData.append(`file ${i}`, file);
+                });
+                let response = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post("/api/profile/upload", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }, params
+                });
+                console.log(response);
+                $(`#${_this.uploadModalId}`).modal("close");
+                _this.openFolder(_this.state.cwd);
             });
-        };
 
-        this.removeFile = index => {
-            let { fileQueue } = this.state;
-            fileQueue.splice(index, 1);
-            this.setState({ fileQueue });
-        };
+            return function (_x3) {
+                return _ref3.apply(this, arguments);
+            };
+        })();
 
         this.modalId = 'detail';
         this.uploadModalId = "upload";
         let { profile } = props;
 
         this.state = {
-            cwd: "",
-            fileQueue: []
+            cwd: ""
         };
     }
     get segments() {
@@ -15609,11 +15620,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__UploadModal__["a" /* default */], {
-                modalId: this.uploadModalId,
-                fileQueue: this.state.fileQueue,
-                addFile: this.addFile,
-                removeFile: this.removeFile }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__UploadModal__["a" /* default */], { modalId: this.uploadModalId, cwd: cwd, uploadFiles: this.uploadFiles }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -15626,10 +15633,18 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                         { className: 'btn modal-trigger', 'data-target': `${this.uploadModalId}` },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'i',
-                            { className: 'material-icons left' },
+                            { className: 'material-icons' },
                             'cloud_upload'
-                        ),
-                        'Upload'
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'button',
+                        { className: 'btn', onClick: this.openFolder.bind(this, this.state.cwd) },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'i',
+                            { className: 'material-icons' },
+                            'cached'
+                        )
                     ),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'span',
@@ -16685,87 +16700,135 @@ module.exports = function (css) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-var _this = this;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path__ = __webpack_require__(116);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_path___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_path__);
 
 
-const UploadModal = ({ modalId, addFile, fileQueue, removeFile }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    "div",
-    { id: modalId, className: "modal" },
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "div",
-        { className: "modal-content" },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "h4",
-            null,
-            "Uploads"
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "table",
-            { className: "striped" },
+
+
+class UploadModal extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
+
+    constructor(props) {
+        super(props);
+
+        this.addFile = ({ files }) => {
+            console.log(files);
+            this.setState({ fileQueue: [...files, ...this.state.fileQueue] }, () => {
+                console.log(this.state.fileQueue);
+            });
+        };
+
+        this.removeFile = index => {
+            let { fileQueue } = this.state;
+            fileQueue.splice(index, 1);
+            this.setState({ fileQueue });
+        };
+
+        this.state = {
+            fileQueue: []
+        };
+    }
+
+    /*  uploadFiles=async()=>{
+         const formData = new FormData();
+         this.state.fileQueue.forEach((file,i)=>{
+             formData.append(`file ${i}`,file)
+         })
+         let response=await axios.post("/api/profile/upload",formData,{
+             headers: {
+               'Content-Type': 'multipart/form-data'
+             },params:{path:this.props.cwd}
+         })
+         console.log(response)
+         
+     } */
+
+    render() {
+        let { fileQueue } = this.state;
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { id: this.props.modalId, className: 'modal' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                "tbody",
-                null,
-                fileQueue.map((file, i) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    "tr",
-                    { key: i },
+                'div',
+                { className: 'modal-content' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'h4',
+                    null,
+                    'Uploads'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'table',
+                    { className: 'striped' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        "td",
+                        'tbody',
                         null,
-                        file.name
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        "td",
-                        null,
-                        file.type
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        "td",
-                        null,
-                        formatFileSize(file.size)
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        "td",
-                        null,
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            "a",
-                            { href: "#!", onClick: removeFile.bind(_this, i) },
+                        fileQueue.map((file, i) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'tr',
+                            { key: i },
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                "i",
-                                { className: "material-icons right " },
-                                "delete"
+                                'td',
+                                null,
+                                file.name
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'td',
+                                null,
+                                file.type
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'td',
+                                null,
+                                formatFileSize(file.size)
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'td',
+                                null,
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'a',
+                                    { href: '#!', onClick: this.removeFile.bind(this, i) },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'i',
+                                        { className: 'material-icons right ' },
+                                        'delete'
+                                    )
+                                )
                             )
-                        )
+                        ))
                     )
-                ))
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'modal-footer' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'file', onChange: e => this.addFile(e.target), type: 'file', className: 'hide' }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'label',
+                    { htmlFor: 'file', className: 'btn' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'i',
+                        { className: 'material-icons left ' },
+                        'add'
+                    ),
+                    ' Add '
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'button',
+                    { className: fileQueue.length > 0 ? "btn" : "btn disabled", onClick: this.props.uploadFiles.bind(this, fileQueue) },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'i',
+                        { className: 'material-icons left ' },
+                        'cloud_upload'
+                    ),
+                    ' Upload '
+                )
             )
-        )
-    ),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "div",
-        { className: "modal-footer" },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", { id: "file", onChange: e => addFile(e.target), type: "file", className: "hide" }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "label",
-            { htmlFor: "file", className: "btn" },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                "i",
-                { className: "material-icons left " },
-                "add"
-            ),
-            " Add "
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "button",
-            { className: fileQueue.length > 0 ? "btn" : "btn disabled" },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                "i",
-                { className: "material-icons left " },
-                "cloud_upload"
-            ),
-            " Upload "
-        )
-    )
-);
+        );
+    }
+
+}
+
 const formatFileSize = (bytes, decimalPoint = 2) => {
     if (bytes == 0) return '0 Bytes';
     var k = 1000,

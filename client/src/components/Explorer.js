@@ -13,8 +13,7 @@ class Explorer extends Component {
         let {profile}=props
         
         this.state = {
-            cwd:"",
-            fileQueue:[]
+            cwd:""
         };
     }
     get segments(){
@@ -100,33 +99,40 @@ class Explorer extends Component {
             {seg}
         </a>)
     }
-    addFile=({files})=>{
-        console.log(files)
-       this.setState({fileQueue:[...files,...this.state.fileQueue]},()=>{
-           console.log(this.state.fileQueue)
-       })
-    }
-    removeFile=(index)=>{
-        let {fileQueue}= this.state
-        fileQueue.splice(index,1)
-        this.setState({fileQueue})
+   
+    uploadFiles=async(files)=>{
+        let params={
+            path:this.state.cwd,
+            id:this.props.profile.id
+        }
+        const formData = new FormData();
+        files.forEach((file,i)=>{
+            formData.append(`file ${i}`,file)
+        })
+        let response=await axios.post("/api/profile/upload",formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },params
+        })
+        console.log(response)
+        $(`#${this.uploadModalId}`).modal("close");
+        this.openFolder(this.state.cwd)
     }
     render(){
         let {openFolder,profile}= this.props
         let {fileInfo,files,cwd}=this.state
         return (
             <div>
-               <UploadModal 
-                        modalId={this.uploadModalId} 
-                        fileQueue={this.state.fileQueue}
-                        addFile={this.addFile}
-                        removeFile={this.removeFile} />
+               <UploadModal  modalId={this.uploadModalId} cwd={cwd} uploadFiles={this.uploadFiles}/>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
                 <div className="card purple darken-1">
                     <div className="card-content white-text">
                     
                     <button className="btn modal-trigger" data-target={`${this.uploadModalId}`} >
-                       <i className="material-icons left">cloud_upload</i>Upload
+                       <i className="material-icons">cloud_upload</i>
+                    </button>
+                    <button className="btn" onClick={this.openFolder.bind(this,this.state.cwd)} >
+                       <i className="material-icons">cached</i>
                     </button>
                         <span className="card-title">
                             {this.segments&& this.segments.map(this.mapPath)}

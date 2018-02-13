@@ -162,6 +162,25 @@ def download():
 
     return  False
 
+@profile_api.route("/upload",methods=['POST'])
+@login_required
+def upload():
+    files=request.files
+    path = request.args["path"]
+    userId, profile = verify()
+    if userId and profile:
+        try:
+            sftp = profile.connect()
+            sftp.cwd(path)
+            for  file in files.itervalues():
+                tempPath=os.path.join("temp",file.filename)
+                file.save(tempPath)
+                stats=sftp.put(tempPath)
+                os.remove(tempPath)
+        except Exception as ex:
+            print (ex)
+    return Response("Done")
+
 
 
 def verify():
