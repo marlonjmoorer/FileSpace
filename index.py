@@ -4,7 +4,12 @@ from flask_migrate import  Migrate
 from shared import  db
 
 app=Flask(__name__)
-app.config.from_pyfile("settings.cfg")
+app.config.update(
+    SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
+    SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
+    SEND_FILE_MAX_AGE_DEFAULT=os.environ.get("SEND_FILE_MAX_AGE_DEFAULT"),
+)
+##app.config.from_pyfile("settings.cfg")
 app.secret_key = "super secret key"
 db.init_app(app)
 
