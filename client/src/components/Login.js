@@ -19,7 +19,7 @@ export default class Login extends Component {
         }catch(error){
             console.log(error)
             if(error.response){
-                this.setState({messages:response.data.errors})
+                this.setState({messages:error.response.data.errors})
             }
             
         }
