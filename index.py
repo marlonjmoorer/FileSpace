@@ -1,5 +1,6 @@
 import  os
 from flask import Flask,send_from_directory
+from flask import Response
 from flask_migrate import  Migrate
 from shared import  db
 
@@ -25,11 +26,13 @@ def index():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    print(path)
-    if path and os.path.exists("./client/"+path):
-        return send_from_directory("./client",path,cache_timeout=-1)
-    else:
-        return send_from_directory("./client","index.html",cache_timeout=-1)
+    try:
+        if path and os.path.exists("./client/"+path):
+            return send_from_directory("./client",path,cache_timeout=-1)
+        else:
+            return send_from_directory("./client","index.html",cache_timeout=-1)
+    except Exception as ex:
+        return Response(ex.message)
 
 @app.after_request
 def add_header(response):
