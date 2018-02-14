@@ -6,3 +6,4 @@ env/*
 *.cfg*
 *.code*
 temp/*
+migrations/*

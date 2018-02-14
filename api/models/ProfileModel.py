@@ -2,7 +2,7 @@ from shared import  db
 from . import  BaseModel
 from werkzeug.security import  generate_password_hash, check_password_hash
 from sqlalchemy import Integer, ForeignKey, String, Column
-from pysftp import  Connection
+from pysftp import  Connection,CnOpts
 
 class ProfileModel(BaseModel):
     __tablename__ = 'Profile'
@@ -30,8 +30,10 @@ class ProfileModel(BaseModel):
         return ProfileModel.query.filter_by(userId=userId).all()
 
     def connect(self):
-
-       return Connection(self.host,
+        cnopts = CnOpts()
+        cnopts.hostkeys = None
+        return Connection(self.host,
                                username=self.username,
                                password=self.password,
-                               port=int(self.port))
+                               port=int(self.port),
+                               cnopts=cnopts)

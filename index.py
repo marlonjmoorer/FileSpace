@@ -1,10 +1,22 @@
 import  os
 from flask import Flask,send_from_directory
+from flask import Response
 from flask_migrate import  Migrate
 from shared import  db
+import sys
+import logging
 
 app=Flask(__name__)
-app.config.from_pyfile("settings.cfg")
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
+if os.path.exists("settings.cfg"):
+    app.config.from_pyfile("settings.cfg")
+else:
+    app.config.update(
+        SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
+        SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
+    )
+
 app.secret_key = "super secret key"
 db.init_app(app)
 
@@ -15,15 +27,19 @@ migrate=Migrate(app,db)
 
 @app.route("/")
 def index():    
-    return send_from_directory("./client","index.html",cache_timeout=-1)
+    return send_from_directory("./client","index.html")
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    if path and os.path.exists("./client/"+path):
-        return send_from_directory("./client",path,cache_timeout=-1)
-    else:
-        return send_from_directory("./client","index.html",cache_timeout=-1)
+    try:
+        if path and os.path.exists("./client/"+path):
+            return send_from_directory("./client",path)
+        else:
+            return send_from_directory("./client","index.html")
+    except Exception as ex:
+        return Response(ex.message)
 
 @app.after_request
 def add_header(response):

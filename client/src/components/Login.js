@@ -18,8 +18,10 @@ export default class Login extends Component {
             this.props.history.push("/");
         }catch(error){
             console.log(error)
+
             if(error.response){
-                this.setState({messages:response.data.errors})
+                console.log(error.response.data)
+                //this.setState({messages:error.response.data.errors})
             }
             
         }
