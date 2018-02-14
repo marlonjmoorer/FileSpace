@@ -15652,7 +15652,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'card purple darken-1' },
+                { className: 'card purple darken-1 window' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'card-content white-text' },
@@ -15688,8 +15688,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                             files && files.sort(fileCompare).map((item, i) => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__File__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.openFile.bind(this, item.name), file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Folder__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.traverse.bind(this, item.name), folder: item }))
                         )
                     )
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'card-action' })
+                )
             )
         );
     }
@@ -16162,7 +16161,7 @@ exports = module.exports = __webpack_require__(119)(false);
 
 
 // module
-exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    max-height:300px;\n    overflow: scroll;\n}\n.explorer > .collection{\n    margin-bottom: 0%\n}", ""]);
+exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    height:375px;\n    overflow: scroll;\n}\n.explorer > .collection{\n    margin-bottom: 0%\n}\n.window{\n    height: 86vh\n}", ""]);
 
 // exports
 

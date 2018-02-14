@@ -146,7 +146,7 @@ class Explorer extends Component {
                 />}
                <UploadModal  modalId={this.uploadModalId} cwd={cwd} uploadFiles={this.uploadFiles}/>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
-                <div className="card purple darken-1">
+                <div className="card purple darken-1 window">
                     <div className="card-content white-text">
                     
                     <button className="btn modal-trigger" data-target={`${this.uploadModalId}`} >
@@ -171,9 +171,7 @@ class Explorer extends Component {
                         </div>
     
                     </div>
-                    <div className="card-action">
-                        
-                    </div>
+                    
                 </div>
     
             </div>
