@@ -158,7 +158,7 @@ def download():
             #r.headers.set('Content-Disposition', 'attachment', filename=os.path.basename(path))
             #return send_file(f,as_attachment=True,mimetype=mime, attachment_filename=os.path.basename(path))
     except Exception as ex :
-        print  ex
+        print(ex)
 
 
     return  False
@@ -179,7 +179,7 @@ def upload():
                 stats=sftp.put(tempPath)
                 os.remove(tempPath)
         except Exception as ex:
-            print (ex)
+            print(ex)
     return Response("Done")
 
 @profile_api.route("/delete")
@@ -197,7 +197,7 @@ def delete():
                 sftp.rmdir(path)
 
         except Exception as ex:
-            print (ex)
+            print(ex)
     return Response("Done")
 
 
