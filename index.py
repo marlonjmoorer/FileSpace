@@ -3,8 +3,12 @@ from flask import Flask,send_from_directory
 from flask import Response
 from flask_migrate import  Migrate
 from shared import  db
+import sys
+import logging
 
 app=Flask(__name__)
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 app.config.update(
     SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
     SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
