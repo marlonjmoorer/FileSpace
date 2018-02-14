@@ -25,6 +25,7 @@ def index():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
+    print(path)
     if path and os.path.exists("./client/"+path):
         return send_from_directory("./client",path,cache_timeout=-1)
     else:
