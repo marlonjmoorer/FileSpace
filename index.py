@@ -9,11 +9,14 @@ import logging
 app=Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
-app.config.update(
-    SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
-    SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
-)
-##app.config.from_pyfile("settings.cfg")
+if os.path.exists("settings.cfg"):
+    app.config.from_pyfile("settings.cfg")
+else:
+    app.config.update(
+        SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
+        SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
+    )
+
 app.secret_key = "super secret key"
 db.init_app(app)
 
@@ -25,6 +28,7 @@ migrate=Migrate(app,db)
 @app.route("/")
 def index():    
     return send_from_directory("./client","index.html")
+
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
