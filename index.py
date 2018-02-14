@@ -12,7 +12,6 @@ app.logger.setLevel(logging.ERROR)
 app.config.update(
     SQLALCHEMY_DATABASE_URI=os.environ.get("SQLALCHEMY_DATABASE_URI"),
     SQLALCHEMY_TRACK_MODIFICATIONS=os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS"),
-    SEND_FILE_MAX_AGE_DEFAULT=os.environ.get("SEND_FILE_MAX_AGE_DEFAULT"),
 )
 ##app.config.from_pyfile("settings.cfg")
 app.secret_key = "super secret key"
@@ -25,16 +24,16 @@ migrate=Migrate(app,db)
 
 @app.route("/")
 def index():    
-    return send_from_directory("./client","index.html",cache_timeout=-1)
+    return send_from_directory("./client","index.html")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
     try:
         if path and os.path.exists("./client/"+path):
-            return send_from_directory("./client",path,cache_timeout=-1)
+            return send_from_directory("./client",path)
         else:
-            return send_from_directory("./client","index.html",cache_timeout=-1)
+            return send_from_directory("./client","index.html")
     except Exception as ex:
         return Response(ex.message)
 
