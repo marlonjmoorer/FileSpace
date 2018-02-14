@@ -4,6 +4,7 @@ import Folder from './Folder';
 import FileDetailModal from './FileDetailModal';
 import axios from 'axios';
 import UploadModal from './UploadModal';
+import ItemMenu from './ItemMenu';
 
 class Explorer extends Component {
     constructor(props) {
@@ -13,34 +14,37 @@ class Explorer extends Component {
         let {profile}=props
         
         this.state = {
-            cwd:""
+            cwd:"",
+            x:"",
+            y:"",
+            selectedItem:null
         };
     }
     get segments(){
        return this.state.cwd? this.state.cwd.split("/"):[]
     }
     componentWillReceiveProps = (nextProps) => {
-
         if(nextProps.profile!=this.props.profile){
-
             this.setState({
                 cwd:nextProps.profile.homeDir,
                 files:nextProps.profile.files
             })
         }
-        
     }
-
-    
     componentDidMount() {
         $(`#${this.modalId}`).modal();
         $(`#${this.uploadModalId}`).modal();
+
+        document.onclick=()=>{
+            this.setState({x:null,y:null})
+        }
+        
     }
 
     openFile=async(path)=>{
         if(path){
             let data={
-                path,
+                path:`${this.state.cwd}/${path}`,
                 id:this.props.profile.id
             }
             try {
@@ -86,17 +90,12 @@ class Explorer extends Component {
         }
         this.openFolder(path)
     }
-    mapPath=(seg,i) =>{
-        if(!seg){
-            return  <span key={i} className="breadcrumb">
-                <i className="material-icons">home</i>
-            </span>
-        }                     
+    mapPath=(seg,i) =>{                
         return(
-        <a key={i} href="#!" 
+        <a key={i} href={seg?"#!":null }
             onClick={this.traverse.bind(this,seg,true)} 
             className="breadcrumb">
-            {seg}
+            {seg?seg:<i className="material-icons">home</i>}
         </a>)
     }
    
@@ -118,11 +117,33 @@ class Explorer extends Component {
         $(`#${this.uploadModalId}`).modal("close");
         this.openFolder(this.state.cwd)
     }
+    menu=(e,item)=>{
+        e.preventDefault();
+        this.setState({x:e.pageX,y:e.pageY,selectedItem:item})
+        console.log(e.pageX,e.pageY,item)
+    }
+    deleteItem= async(item)=>{
+        console.log(item)
+        let params={
+            path:this.segments.concat(item.name).join("/"),
+            id:this.props.profile.id,
+            item
+        }
+        let response= await axios.get("/api/profile/delete",params)
+    }
+
     render(){
         let {openFolder,profile}= this.props
-        let {fileInfo,files,cwd}=this.state
+        let {fileInfo,files,cwd,selectedItem}=this.state
         return (
             <div>
+                {selectedItem && 
+                <ItemMenu 
+                {...this.state} 
+                deleteItem={this.deleteItem}
+                showDetails={this.openFile}
+                item={selectedItem}
+                />}
                <UploadModal  modalId={this.uploadModalId} cwd={cwd} uploadFiles={this.uploadFiles}/>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
                 <div className="card purple darken-1">
@@ -137,14 +158,14 @@ class Explorer extends Component {
                         <span className="card-title">
                             {this.segments&& this.segments.map(this.mapPath)}
                         </span>
-                        <div className="explorer teal">
+                        <div className="explorer">
                             <div className="collection">
                                 {files && files
                                     .sort(fileCompare)
                                     .map((item,i) => 
                                        item.isFile?
-                                       <File key={i} onClick={this.openFile.bind(this,`${cwd}/${item.name}`)} file={item}  />: 
-                                       <Folder key={i} onClick={this.traverse.bind(this,item.name)} folder={item}/>
+                                       <File key={i} ctxMenu={this.menu} onClick={this.openFile.bind(this,item.name)} file={item}  />: 
+                                       <Folder key={i} ctxMenu={this.menu}  onClick={this.traverse.bind(this,item.name)} folder={item}/>
                                     )}
                             </div>
                         </div>

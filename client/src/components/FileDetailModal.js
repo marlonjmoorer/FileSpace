@@ -37,7 +37,8 @@ const FileDetailModal = ({modalId,fileInfo,profileId}) => (
             </div>
         }
         <div className="modal-footer">
-        {fileInfo&&  
+        {
+            fileInfo&& fileInfo.isFile &&  
           <a href="#!"  onClick={download.bind(this,profileId,fileInfo.path)} className="modal-action waves-effect waves-green btn">Download</a>
         }
         </div>

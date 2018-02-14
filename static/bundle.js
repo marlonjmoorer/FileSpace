@@ -15461,7 +15461,11 @@ const ProfileModal = ({ onSubmit, modalId, errors }) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__UploadModal__ = __webpack_require__(122);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ItemMenu__ = __webpack_require__(123);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 
 
 
@@ -15477,9 +15481,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         _this = super(props);
 
         this.componentWillReceiveProps = nextProps => {
-
             if (nextProps.profile != this.props.profile) {
-
                 this.setState({
                     cwd: nextProps.profile.homeDir,
                     files: nextProps.profile.files
@@ -15491,7 +15493,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             var _ref = _asyncToGenerator(function* (path) {
                 if (path) {
                     let data = {
-                        path,
+                        path: `${_this.state.cwd}/${path}`,
                         id: _this.props.profile.id
                     };
                     try {
@@ -15551,23 +15553,16 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         };
 
         this.mapPath = (seg, i) => {
-            if (!seg) {
-                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'span',
-                    { key: i, className: 'breadcrumb' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'i',
-                        { className: 'material-icons' },
-                        'home'
-                    )
-                );
-            }
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { key: i, href: '#!',
+                { key: i, href: seg ? "#!" : null,
                     onClick: this.traverse.bind(this, seg, true),
                     className: 'breadcrumb' },
-                seg
+                seg ? seg : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'i',
+                    { className: 'material-icons' },
+                    'home'
+                )
             );
         };
 
@@ -15596,30 +15591,63 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             };
         })();
 
+        this.menu = (e, item) => {
+            e.preventDefault();
+            this.setState({ x: e.pageX, y: e.pageY, selectedItem: item });
+            console.log(e.pageX, e.pageY, item);
+        };
+
+        this.deleteItem = (() => {
+            var _ref4 = _asyncToGenerator(function* (item) {
+                console.log(item);
+                let params = {
+                    path: _this.segments.concat(item.name).join("/"),
+                    id: _this.props.profile.id,
+                    item
+                };
+                let response = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get("/api/profile/delete", params);
+            });
+
+            return function (_x4) {
+                return _ref4.apply(this, arguments);
+            };
+        })();
+
         this.modalId = 'detail';
         this.uploadModalId = "upload";
         let { profile } = props;
 
         this.state = {
-            cwd: ""
+            cwd: "",
+            x: "",
+            y: "",
+            selectedItem: null
         };
     }
     get segments() {
         return this.state.cwd ? this.state.cwd.split("/") : [];
     }
 
-
     componentDidMount() {
         $(`#${this.modalId}`).modal();
         $(`#${this.uploadModalId}`).modal();
+
+        document.onclick = () => {
+            this.setState({ x: null, y: null });
+        };
     }
 
     render() {
         let { openFolder, profile } = this.props;
-        let { fileInfo, files, cwd } = this.state;
+        let { fileInfo, files, cwd, selectedItem } = this.state;
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
+            selectedItem && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__ItemMenu__["a" /* default */], _extends({}, this.state, {
+                deleteItem: this.deleteItem,
+                showDetails: this.openFile,
+                item: selectedItem
+            })),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__UploadModal__["a" /* default */], { modalId: this.uploadModalId, cwd: cwd, uploadFiles: this.uploadFiles }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -15653,11 +15681,11 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                     ),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
-                        { className: 'explorer teal' },
+                        { className: 'explorer' },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'div',
                             { className: 'collection' },
-                            files && files.sort(fileCompare).map((item, i) => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__File__["a" /* default */], { key: i, onClick: this.openFile.bind(this, `${cwd}/${item.name}`), file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Folder__["a" /* default */], { key: i, onClick: this.traverse.bind(this, item.name), folder: item }))
+                            files && files.sort(fileCompare).map((item, i) => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__File__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.openFile.bind(this, item.name), file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Folder__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.traverse.bind(this, item.name), folder: item }))
                         )
                     )
                 ),
@@ -15688,10 +15716,10 @@ let fileCompare = (a, b) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
-const File = ({ file, onClick }) => {
+const File = ({ file, onClick, ctxMenu }) => {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         "a",
-        { className: "collection-item", onClick: onClick },
+        { className: "collection-item", onClick: onClick, onContextMenu: e => ctxMenu(e, file) },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             "span",
             { className: "title" },
@@ -15720,9 +15748,9 @@ const File = ({ file, onClick }) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
 
-const Folder = ({ folder, onClick }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+const Folder = ({ folder, onClick, ctxMenu }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     "a",
-    { className: "collection-item", onClick: onClick },
+    { className: "collection-item", onClick: onClick, onContextMenu: e => ctxMenu(e, folder) },
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         "span",
         { className: "title" },
@@ -15819,7 +15847,7 @@ const FileDetailModal = ({ modalId, fileInfo, profileId }) => __WEBPACK_IMPORTED
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         { className: 'modal-footer' },
-        fileInfo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        fileInfo && fileInfo.isFile && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'a',
             { href: '#!', onClick: download.bind(_this, profileId, fileInfo.path), className: 'modal-action waves-effect waves-green btn' },
             'Download'
@@ -16837,6 +16865,38 @@ const formatFileSize = (bytes, decimalPoint = 2) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(decimalPoint)) + ' ' + sizes[i];
 };
 /* harmony default export */ __webpack_exports__["a"] = (UploadModal);
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+var _this = this;
+
+
+const ItemMenu = ({ item, x, y, deleteItem, showDetails }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "ul",
+    { className: "collection", style: {
+            top: `${y}px`, left: `${x}px`,
+            position: "absolute",
+            display: x && y ? "block" : "none",
+            zIndex: 10
+        } },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "li",
+        { onClick: showDetails.bind(_this, item.name), className: "collection-item" },
+        "Properties"
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "li",
+        { onClick: deleteItem.bind(_this, item), className: "collection-item" },
+        "Delete"
+    )
+);
+
+/* harmony default export */ __webpack_exports__["a"] = (ItemMenu);
 
 /***/ })
 /******/ ]);

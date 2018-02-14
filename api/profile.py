@@ -131,7 +131,8 @@ def getFileInfo():
                 "last_modified":modified,
                 "path":path,
                 "name":path.split('/')[-1],
-                "permission":''
+                "permission":'',
+                "isFile":sftp.isfile(path)
             })
         except Exception as ex:
             return Response(False)
@@ -145,15 +146,15 @@ def download():
     userId, profile = verify()
     try:
         sftp = profile.connect()
-        with SpooledTemporaryFile(1024000) as f:  # example max size before moving to file = 1MB
-            sftp.getfo(path, f)
-            f.seek(0)
+        with SpooledTemporaryFile(1024000) as file:  # example max size before moving to file = 1MB
+            sftp.getfo(path, file)
+            file.seek(0)
             mime,encoding= guess_type(path)
-            r = Response(f.read(),
+            res = Response(file.read(),
                          mimetype=mime,
                          headers={"Content-disposition":
                  "attachment; filename=%s"%os.path.basename(path)})
-            return r
+            return res
             #r.headers.set('Content-Disposition', 'attachment', filename=os.path.basename(path))
             #return send_file(f,as_attachment=True,mimetype=mime, attachment_filename=os.path.basename(path))
     except Exception as ex :
@@ -181,6 +182,23 @@ def upload():
             print (ex)
     return Response("Done")
 
+@profile_api.route("/delete")
+@login_required
+def delete():
+    path = request.args["path"]
+    userId, profile = verify()
+    if userId and profile:
+        try:
+            sftp = profile.connect()
+
+            if(sftp.isfile(path)):
+                sftp.remove(path)
+            else:
+                sftp.rmdir(path)
+
+        except Exception as ex:
+            print (ex)
+    return Response("Done")
 
 
 def verify():
