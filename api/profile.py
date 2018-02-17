@@ -10,6 +10,26 @@ from models.ProfileModel import ProfileModel
 profile_api= Blueprint("profile",__name__)
 
 
+
+@profile_api.route("/testConnection",methods=['POST'])
+@login_required
+def testConnection():
+
+    name= request.form["name"]
+    host=request.form["host"]
+    port=request.form["port"] or 22
+    username=request.form["username"]
+    password=request.form["password"]
+
+    profile = ProfileModel(name,host, port, username, password)
+    try:
+       testFtp= profile.connect()
+       return  Response("Connection Successful!")
+    except Exception as ex :
+        return Response(ex.message),500
+
+
+
 @profile_api.route("/addProfile",methods=['POST'])
 @login_required
 def add():

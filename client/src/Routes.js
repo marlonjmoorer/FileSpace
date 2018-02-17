@@ -8,15 +8,13 @@ import {
     Route,
     Link
   } from 'react-router-dom'
-import './main.css'
 
-const routes =  ()=>
+
+
+export default ()=>
 <Router>
      <App>
           <Route exact path="/" component={Home}/>
           <Route exact path="/dashboard" component={Dashboard}/>   
-    </App>
+     </App>
 </Router>
-   
-
-export default routes

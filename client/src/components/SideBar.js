@@ -12,13 +12,14 @@ class SideBar extends Component {
     state={
         modalId:"addModal",
         errors:[],
-        profileId:''
+        profileId:'',
+        testMessage:'',
     }
     componentDidMount(){
        
         $(`#${this.state.modalId}`).modal({
             complete:()=>{
-               this.setState({errors:[]})
+               this.setState({errors:[],testMessage:''})
             }
         });
     }
@@ -30,21 +31,36 @@ class SideBar extends Component {
     
     componentDidUpdate(prevProps, prevState) {
         
-       const {profiles,profile}=this.props
+      const {profiles,profile}=this.props
       if(!profile.id&&profiles.length > 0){
-        
           this.select.value=profiles[0].id
           this.props.onSelect(profiles[0].id)
-         
       } 
     }
+    testConnection= async(data) => {
+        console.log(data)
+        try {
+            let response = await axios.post("/api/profile/testConnection", data)
 
-    addProfile = async(e) => {
-        e.preventDefault();
-        let form = new FormData(e.target)
-        for (var pair of form.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
+            if (response.data) {
+              this.setState({testMessage:response.data})
+            }
+        } catch (error) {
+
+            console.log(error)
+            if(error.response){
+                console.log(error.response.data)
+                this.setState({testMessage:error.response.data})
+            }
         }
+
+    }
+    addProfile = async(e) => {
+        
+        e.preventDefault();
+
+        let form = new FormData(e.target)
+        this.setState({testMessage:''})
         try {
             let response = await axios.post("/api/profile/addProfile", form)
 
@@ -70,7 +86,12 @@ class SideBar extends Component {
         const {profiles,profile}=this.props
         return (
             <div>
-               <ProfileModal onSubmit={this.addProfile} errors={this.state.errors} modalId={this.state.modalId}/>
+               <ProfileModal 
+               onSubmit={this.addProfile} 
+               errors={this.state.errors} 
+               modalId={this.state.modalId}
+               message={this.state.testMessage}
+               testConnection={this.testConnection} />
                 <div className="row">
                     <div className="col s12 center-align">
                         <img

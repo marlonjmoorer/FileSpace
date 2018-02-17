@@ -7,3 +7,5 @@ env/*
 *.code*
 temp/*
 migrations/*
+static/*
+
