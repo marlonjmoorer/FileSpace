@@ -6,7 +6,7 @@ import { Toast } from './Utils';
 export default class Login extends Component {
 
     state={
-        messages:[]
+      
     }
      componentDidMount() {
         $("#loginForm").validate({
@@ -42,11 +42,10 @@ export default class Login extends Component {
         if(!$(e.target).valid()){return}
         try{
             var res= await axios.post("api/user/login",data)
-
             document.querySelectorAll("form").forEach(form=>
                 form.reset()
             )
-            this.setState({messages:[]})
+
             this.props.history.push("/");
         }catch(error){
 
@@ -62,7 +61,6 @@ export default class Login extends Component {
     render() {
 
         return (
-           
                 <form id="loginForm" onSubmit={this.onSubmit}>
                     <div className="row">
                         <div className="input-field col s12">
@@ -79,8 +77,7 @@ export default class Login extends Component {
                     <button className="btn waves-effect waves-light" type="submit" name="action">Submit
                         <i className="material-icons right">send</i>
                     </button>
-                </form>
-           
+                </form> 
         )
     }
 }

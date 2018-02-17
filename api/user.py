@@ -30,7 +30,7 @@ def signup():
         errorMessages.append("User already exist")
 
     if errorMessages:
-        return json.dumps({"errors":errorMessages}),500
+        return make_response((json.dumps(errorMessages))),500
 
     else:
         newUser=UserModel()
@@ -38,7 +38,7 @@ def signup():
         newUser.set_password(password)
 
         if newUser.save():
-          return json.dumps({"success":True})
+          return make_response((json.dumps("Signup Successful")))
 
 @user_api.route("/login", methods=['POST'])
 def login():

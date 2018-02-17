@@ -2281,28 +2281,36 @@ module.exports = focusNode;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Navbar__ = __webpack_require__(58);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_css__ = __webpack_require__(88);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__main_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__main_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_router_dom__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__main_css__ = __webpack_require__(88);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__main_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__main_css__);
+
 
 
 
 class App extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
-   render() {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-         'div',
-         { className: 'outter' },
-         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+
+    componentWillMount() {
+        this.unlisten = this.props.history.listen((location, action) => {
+            $('.dropdown-button').dropdown();
+        });
+    }
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            {
-               className: 'main' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__components_Navbar__["a" /* default */], null),
-            this.props.children
-         )
-      );
-   }
+            { className: 'outter' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                {
+                    className: 'main' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__components_Navbar__["a" /* default */], null),
+                this.props.children
+            )
+        );
+    }
 }
 
-/* harmony default export */ __webpack_exports__["a"] = (App);
+/* harmony default export */ __webpack_exports__["a"] = (Object(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* withRouter */])(App));
 
 /***/ }),
 /* 32 */
@@ -14245,7 +14253,7 @@ exports = module.exports = __webpack_require__(90)(false);
 
 
 // module
-exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    height:375px;\n    overflow: scroll;\n}\n.explorer > .collection{\n    margin-bottom: 0%\n}\n.window{\n    height: 86vh\n}", ""]);
+exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    height:375px;\n    overflow: scroll;\n}\n.explorer > .collection{\n    margin-bottom: 0%\n}\n.window{\n    height: 86vh\n}\n.tabs .tab a{\n    color:#00ACC1;\n}\n.tabs .tab a:hover,.tabs .tab a.active {\n\tbackground-color:transparent;\n\tcolor:#008B9B;\n}\n.tabs .tab.disabled a,.tabs .tab.disabled a:hover {\n\tcolor:rgba(102,147,153,0.7);\t\n}\n.tabs .indicator {\n\tbackground-color:#009BAD;\n}\n\n#toast-container {\n    top: 10%;\n    right: 7%;\n    bottom: auto !important;\n    left:auto !important;\n}", ""]);
 
 // exports
 
@@ -14850,32 +14858,74 @@ module.exports = function (css) {
 
 
 
-const Home = props => {
-    console.log(__WEBPACK_IMPORTED_MODULE_4_react_cookies___default.a.load("id"));
-    if (__WEBPACK_IMPORTED_MODULE_4_react_cookies___default.a.load("id")) {
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_router_dom__["b" /* Redirect */], { to: '/dashboard' });
+
+class Home extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
+
+    constructor(props) {
+        super(props);
+        this.state = {};
     }
-    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'div',
-        { className: 'container' },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    componentDidMount() {
+        $('.tabs').tabs();
+    }
+    render() {
+        if (__WEBPACK_IMPORTED_MODULE_4_react_cookies___default.a.load("id")) {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_router_dom__["b" /* Redirect */], { to: '/dashboard' });
+        }
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'row', style: {
-                    marginTop: '50px'
-                } },
+            { className: 'container' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'col s5' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__Login__["a" /* default */], props)
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'col s5  push-s1' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Signup__["a" /* default */], null)
+                {
+                    className: 'row',
+                    style: {
+                        marginTop: '50px'
+                    } },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s8 push-s2' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'card' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'ul',
+                            { className: 'tabs  tabs-fixed-width' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'li',
+                                { className: 'tab col s4' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'a',
+                                    { href: '#login' },
+                                    'Login'
+                                )
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'li',
+                                { className: 'tab col s4' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'a',
+                                    { href: '#signup' },
+                                    'Signup'
+                                )
+                            )
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { id: 'login', className: 'card-content' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__Login__["a" /* default */], this.props)
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { id: 'signup', className: 'card-content' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Signup__["a" /* default */], null)
+                        )
+                    )
+                )
             )
-        )
-    );
-};
+        );
+    }
+}
 
 /* harmony default export */ __webpack_exports__["a"] = (Home);
 
@@ -14888,7 +14938,10 @@ const Home = props => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Utils__ = __webpack_require__(125);
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+
 
 
 
@@ -14896,26 +14949,28 @@ class Login extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     constructor(...args) {
         var _temp, _this;
 
-        return _temp = _this = super(...args), this.state = {
-            messages: []
-        }, this.onSubmit = (() => {
+        return _temp = _this = super(...args), this.state = {}, this.onSubmit = (() => {
             var _ref = _asyncToGenerator(function* (e) {
                 e.preventDefault();
                 var data = new FormData(e.target);
+                $(e.target).validate();
+                if (!$(e.target).valid()) {
+                    return;
+                }
                 try {
                     var res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post("api/user/login", data);
-                    console.log(res);
                     document.querySelectorAll("form").forEach(function (form) {
                         return form.reset();
                     });
-                    _this.setState({ messages: [] });
+
                     _this.props.history.push("/");
                 } catch (error) {
-                    console.log(error);
 
-                    if (error.response) {
-                        console.log(error.response.data);
-                        //this.setState({messages:error.response.data.errors})
+                    if (error.response && error.response.data) {
+                        error.response.data.forEach(function (error) {
+                            Object(__WEBPACK_IMPORTED_MODULE_2__Utils__["a" /* Toast */])(error);
+                        });
+                        _this.setState({ messages: error.response.data });
                     }
                 }
             });
@@ -14926,65 +14981,73 @@ class Login extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         })(), _temp;
     }
 
+    componentDidMount() {
+        $("#loginForm").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                }
+            },
+            errorClass: "invalid",
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                var placement = $(element).data('error');
+
+                if (placement) {
+                    $(placement).append(error);
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+
     render() {
-        console.log(this.props);
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'row card' },
+            'form',
+            { id: 'loginForm', onSubmit: this.onSubmit },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'form',
-                { id: 'loginForm', onSubmit: this.onSubmit, className: 'col card-content s12' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'span',
-                    { className: 'card-title' },
-                    'Login'
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'ul',
-                    null,
-                    this.state.messages.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'li',
-                        { className: 'red-text' },
-                        e
-                    ))
-                ),
+                'div',
+                { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'row' },
+                    { className: 'input-field col s12' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'email', type: 'text', className: 'validate' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'input-field col s12' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'email', type: 'text', className: 'validate' }),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'label',
-                            { htmlFor: 'email' },
-                            'Email'
-                        )
+                        'label',
+                        { htmlFor: 'email', 'data-error': 'Please enter a value.' },
+                        'Email'
                     )
-                ),
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'row' },
+                    { className: 'input-field col s12' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'password', type: 'password', className: 'validate' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'input-field col s12' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { name: 'password', type: 'password', className: 'validate' }),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'label',
-                            { htmlFor: 'password' },
-                            'Password'
-                        )
+                        'label',
+                        { htmlFor: 'password' },
+                        'Password'
                     )
-                ),
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { className: 'btn waves-effect waves-light', type: 'submit', name: 'action' },
+                'Submit',
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'button',
-                    { className: 'btn waves-effect waves-light', type: 'submit', name: 'action' },
-                    'Submit',
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'i',
-                        { className: 'material-icons right' },
-                        'send'
-                    )
+                    'i',
+                    { className: 'material-icons right' },
+                    'send'
                 )
             )
         );
@@ -15830,6 +15893,7 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Utils__ = __webpack_require__(125);
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 
@@ -15839,22 +15903,28 @@ class Signup extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     constructor(...args) {
         var _temp, _this;
 
-        return _temp = _this = super(...args), this.state = {
-            messages: []
-        }, this.onSubmit = (() => {
+        return _temp = _this = super(...args), this.state = {}, this.onSubmit = (() => {
             var _ref = _asyncToGenerator(function* (e) {
                 e.preventDefault();
                 var data = new FormData(e.target);
+                $(e.target).validate();
+                if (!$(e.target).valid()) {
+                    return;
+                }
                 try {
                     var res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post("api/user/signup", data);
                     console.log(res);
                     document.querySelectorAll("form").forEach(function (form) {
                         return form.reset();
                     });
-                    _this.setState({ messages: [] });
+                    Object(__WEBPACK_IMPORTED_MODULE_2__Utils__["a" /* Toast */])(res.data);
                 } catch (error) {
-                    var { response } = error;
-                    _this.setState({ messages: response.data.errors });
+                    if (error.response && error.response.data) {
+                        error.response.data.forEach(function (error) {
+                            Object(__WEBPACK_IMPORTED_MODULE_2__Utils__["a" /* Toast */])(error);
+                        });
+                        _this.setState({ messages: error.response.data });
+                    }
                 }
             });
 
@@ -15864,78 +15934,90 @@ class Signup extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         })(), _temp;
     }
 
+    componentDidMount() {
+        $("#signupForm").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: true,
+                    equalTo: "#password"
+                }
+            },
+            errorClass: "invalid",
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                var placement = $(element).data('error');
+
+                if (placement) {
+                    $(placement).append(error);
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+
     render() {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'row card' },
+            'form',
+            { id: 'signupForm', onSubmit: this.onSubmit },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'form',
-                { id: 'signInForm', onSubmit: this.onSubmit, className: 'col card-content s12' },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'span',
-                    { className: 'card-title' },
-                    'Signup'
-                ),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'ul',
-                    null,
-                    this.state.messages.map(e => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'li',
-                        { className: 'red-text' },
-                        e
-                    ))
-                ),
+                'div',
+                { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'row' },
+                    { className: 'input-field col s12' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'email', type: 'text', className: 'validate', name: 'email' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'input-field col s12' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'email', type: 'text', className: 'validate', name: 'email' }),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'label',
-                            { htmlFor: 'email' },
-                            'Email'
-                        )
+                        'label',
+                        { htmlFor: 'email' },
+                        'Email'
                     )
-                ),
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'row' },
+                    { className: 'input-field col s12' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'password', type: 'password', className: 'validate', name: 'password' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'input-field col s12' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'password', type: 'password', className: 'validate', name: 'password' }),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'label',
-                            { htmlFor: 'password' },
-                            'Password'
-                        )
+                        'label',
+                        { htmlFor: 'password' },
+                        'Password'
                     )
-                ),
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
-                    { className: 'row' },
+                    { className: 'input-field col s12' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'confirm_password', type: 'password', className: 'validate', name: 'confirm_password' }),
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'input-field col s12' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { id: 'confirm_password', type: 'password', className: 'validate', name: 'confirm_password' }),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'label',
-                            { htmlFor: 'confirm_password' },
-                            'Confirm  Password'
-                        )
+                        'label',
+                        { htmlFor: 'confirm_password' },
+                        'Confirm  Password'
                     )
-                ),
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'button',
+                { className: 'btn waves-effect waves-light', type: 'submit', name: 'action' },
+                'Submit',
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'button',
-                    { className: 'btn waves-effect waves-light', type: 'submit', name: 'action' },
-                    'Submit',
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'i',
-                        { className: 'material-icons right' },
-                        'send'
-                    )
+                    'i',
+                    { className: 'material-icons right' },
+                    'send'
                 )
             )
         );
@@ -17029,6 +17111,26 @@ const ItemMenu = ({ item, x, y, deleteItem, showDetails }) => __WEBPACK_IMPORTED
 );
 
 /* harmony default export */ __webpack_exports__["a"] = (ItemMenu);
+
+/***/ }),
+/* 124 */,
+/* 125 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const Toast = text => {
+
+    var dismiss = $('<button class="btn-flat toast-action">Dismiss</button>');
+    dismiss.click(function () {
+
+        console.log($(this).closest('.toast'));
+        $(this).closest('.toast')[0].M_Toast.remove();
+    });
+    var content = $(`<span>${text}</span>`).add(dismiss);
+    Materialize.toast(content, 10000);
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = Toast;
+
 
 /***/ })
 /******/ ]);

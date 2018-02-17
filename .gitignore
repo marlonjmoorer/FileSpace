@@ -9,3 +9,5 @@ temp/*
 migrations/*
 static/*
 
+static/bundle.js.map
+static/bundle.js
