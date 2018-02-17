@@ -62,7 +62,7 @@ def login():
        return response
     else:
 
-        return  make_response(json.dumps({"errors": errorMessages}), 500)
+        return  make_response(json.dumps(errorMessages), 500)
 
 
 

@@ -26,15 +26,13 @@ export default class Signup extends Component {
 
     render() {
         return (
-            <div className="row card">
-                <form id="signInForm" onSubmit={this.onSubmit} className="col card-content s12" >
-                <span className="card-title">Signup</span>
+           
+                <form id="signInForm" onSubmit={this.onSubmit} >
                     <ul>
                         {this.state.messages.map(e=>
                             <li className="red-text">{e}</li>
                         )}
                     </ul>
-                    
                     <div className="row">
                         <div className="input-field col s12">
                             <input id="email" type="text" className="validate" name="email"/>
@@ -58,7 +56,7 @@ export default class Signup extends Component {
                         <i className="material-icons right">send</i>
                     </button>
                 </form>
-            </div>
+
         )
     }
 }
