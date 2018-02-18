@@ -15,21 +15,19 @@ class SideBar extends Component {
         modalId:"addModal",
         errors:[],
         profileId:'',
-        testMessage:''
+        
     }
     componentDidMount(){
        
         $(`#${this.state.modalId}`).modal({
             complete:()=>{
-               this.setState({errors:[],testMessage:''})
+               this.setState({errors:[]})
             }
         });
     }
 
     componentWillReceiveProps(nextProps) {
         const {profile}=this.props
-        console.log(this.props)
-        console.log(nextProps)
         if(!profile.id && nextProps.profiles.length > 0 && this.props.profiles.length==0){
             
            this.props.onSelect(nextProps.profiles[0].id)
@@ -64,7 +62,7 @@ class SideBar extends Component {
         e.preventDefault();
 
         let form = new FormData(e.target)
-        this.setState({testMessage:''})
+
         try {
             let response = await axios.post("/api/profile/addProfile", form)
 
@@ -87,39 +85,39 @@ class SideBar extends Component {
 
     }
     render() {
-        const {profiles,profile}=this.props
+        const {profiles,profile,user}=this.props
         return (
             <div>
                <ProfileModal 
                onSubmit={this.addProfile} 
                errors={this.state.errors} 
                modalId={this.state.modalId}
-               message={this.state.testMessage}
+
                testConnection={this.testConnection} />
+               <div className="row">
+                   
+                </div>
                 <div className="row">
                     <div className="col s12 center-align">
-                        <img
-                            width="150"
-                            height="150"
-                            src="https://dl2.macupdate.com/images/icons256/58907.png?d=1513523636"
-                            alt=""
-                            className="circle responsive-img"/>
+                        <i className="material-icons white" style={{fontSize:"100px",marginTop:"8px"}} >account_box</i>
+                        <p className="white-text" >{user?user.username:""}</p>
                     </div>
                 </div>
                 <div className="row">
                     <label>Profile</label>
                     <select value={profile.id||""} onChange={e=>this.props.onSelect(e.target.value)} className="browser-default">
-                        <option value="" >Choose your option</option>
-                        {profiles && profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>)}
+                        
+                        {profiles&& profiles.length>0? profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>):<option value="" >No profiles added</option>}
                     </select>
                 </div>
                 <div className="row">
+                    {this.props.loading &&
+                        <div className="progress">
+                            <div className="indeterminate"></div>
+                        </div>}
                     <a className="waves-effect waves-light btn modal-trigger" data-target={`${this.state.modalId}`}>
-                    <i className="material-icons left">add</i>Add Profile</a>
-                   {this.props.loading &&
-                   <div className="progress">
-                        <div className="indeterminate"></div>
-                    </div>}
+                    <i className="material-icons right">add</i>Add Profile</a>
+                   
                 </div>
                 
             </div>

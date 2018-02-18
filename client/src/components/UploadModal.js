@@ -24,19 +24,11 @@ class UploadModal extends Component {
         fileQueue.splice(index,1)
         this.setState({fileQueue})
     }
-   /*  uploadFiles=async()=>{
-        const formData = new FormData();
-        this.state.fileQueue.forEach((file,i)=>{
-            formData.append(`file ${i}`,file)
-        })
-        let response=await axios.post("/api/profile/upload",formData,{
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },params:{path:this.props.cwd}
-        })
-        console.log(response)
-        
-    } */
+    componentDidMount() {
+        $(`#${this.props.modalId}`).modal()
+       
+    }
+  
 
     render(){
         let {fileQueue}=this.state

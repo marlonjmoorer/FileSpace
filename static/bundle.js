@@ -10263,8 +10263,8 @@ const Nav = props => {
             { className: 'nav-wrapper purple darken-4' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { href: '#', className: 'brand-logo' },
-                'Logo'
+                { href: '#', className: 'brand-logo center' },
+                'FileSpot'
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'ul',
@@ -14334,7 +14334,7 @@ exports = module.exports = __webpack_require__(92)(false);
 
 
 // module
-exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    height:375px;\n    overflow: scroll;\n}\n.explorer > .collection{\n    margin-bottom: 0%\n}\n.window{\n    height: 86vh \n}\n.tabs .tab a{\n    color:#00ACC1;\n}\n.tabs .tab a:hover,.tabs .tab a.active {\n\tbackground-color:transparent;\n\tcolor:#008B9B;\n}\n.tabs .tab.disabled a,.tabs .tab.disabled a:hover {\n\tcolor:rgba(102,147,153,0.7);\t\n}\n.tabs .indicator {\n\tbackground-color:#009BAD;\n}\n\n#toast-container {\n    top: 10%;\n    right: 7%;\n    bottom: auto !important;\n    left:auto !important;\n}\n\n.preloader-background {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: center;\n\t\n\t/* position: absolute; */\n    z-index: 999;\n    width: 100%;\n\n    /* height: 86vh; */\n/* \ttop: 0;\n\tleft: 0;\n\tright: 0;\n\tbottom: 0; */\n \n}\n.preloader-background>  p {\n    padding-top:120px;\n    margin-left: -60px;\n    opacity: 0.8;\n  } ", ""]);
+exports.push([module.i, "html,body{\n    width: 100%;\n    height: 100vh;\n    margin: 0;\n}\n\n#app,.outter,.main{\n    width: 100%;\n    height: 100%;\n}\n.main{\n    background:url('https://graphicflip.com/wp-content/uploads/2016/02/40-backgrounds-material.jpg');\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.modal {\n  /*   max-height: 90%; */\n}\n#addModal.modal { \n    width: 70% !important ; \n    height: 95vh !important ;\n} \n\n.collapsible-body{\n    max-height: 40vh;\n    overflow: scroll;\n    padding: 5px;\n}\n.explorer{\n    height: 400px;\n    overflow: scroll;\n    margin-top: 8px;\n}\n.explorer > .collection{\n    margin: 0%\n}\n.window{\n    height: 86vh \n}\n.tabs .tab a{\n    color:#00ACC1;\n}\n.tabs .tab a:hover,.tabs .tab a.active {\n\tbackground-color:transparent;\n\tcolor:#008B9B;\n}\n.tabs .tab.disabled a,.tabs .tab.disabled a:hover {\n\tcolor:rgba(102,147,153,0.7);\t\n}\n.tabs .indicator {\n\tbackground-color:#009BAD;\n}\n\n#toast-container {\n    top: 10%;\n    right: 7%;\n    bottom: auto !important;\n    left:auto !important;\n}\n\n.preloader-background {\n\tdisplay: flex;\n\talign-items: center;\n\tjustify-content: center;\n\t\n\t/* position: absolute; */\n    z-index: 999;\n    width: 100%;\n\n    /* height: 86vh; */\n/* \ttop: 0;\n\tleft: 0;\n\tright: 0;\n\tbottom: 0; */\n \n}\n.preloader-background>  p {\n    padding-top:120px;\n    margin-left: -60px;\n    opacity: 0.8;\n  } ", ""]);
 
 // exports
 
@@ -16139,11 +16139,21 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             } catch (error) {
                 console.log(error);
             }
+        }), this.getUserName = _asyncToGenerator(function* () {
+            try {
+                let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/user/info");
+                if (res.data) {
+                    _this.setState({ user: res.data });
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }), _temp;
     }
 
     componentDidMount() {
         this.loadProfiles();
+        this.getUserName();
     }
 
     render() {
@@ -16158,7 +16168,7 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'col s9' },
+                { className: 'col s9', style: { margin: 0, padding: 0 } },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Explorer__["a" /* default */], _extends({}, this.state, { openFile: this.openFile, openFolder: this.openFolder }))
             )
         );
@@ -16196,8 +16206,8 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         this.state = {
             modalId: "addModal",
             errors: [],
-            profileId: '',
-            testMessage: ''
+            profileId: ''
+
         };
 
         this.testConnection = (() => {
@@ -16230,7 +16240,7 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 e.preventDefault();
 
                 let form = new FormData(e.target);
-                _this.setState({ testMessage: '' });
+
                 try {
                     let response = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post("/api/profile/addProfile", form);
 
@@ -16259,15 +16269,13 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
         $(`#${this.state.modalId}`).modal({
             complete: () => {
-                this.setState({ errors: [], testMessage: '' });
+                this.setState({ errors: [] });
             }
         });
     }
 
     componentWillReceiveProps(nextProps) {
         const { profile } = this.props;
-        console.log(this.props);
-        console.log(nextProps);
         if (!profile.id && nextProps.profiles.length > 0 && this.props.profiles.length == 0) {
 
             this.props.onSelect(nextProps.profiles[0].id);
@@ -16277,7 +16285,7 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     componentDidUpdate(prevProps, prevState) {}
 
     render() {
-        const { profiles, profile } = this.props;
+        const { profiles, profile, user } = this.props;
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
@@ -16285,20 +16293,25 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 onSubmit: this.addProfile,
                 errors: this.state.errors,
                 modalId: this.state.modalId,
-                message: this.state.testMessage,
+
                 testConnection: this.testConnection }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'row' }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'row' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'col s12 center-align' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', {
-                        width: '150',
-                        height: '150',
-                        src: 'https://dl2.macupdate.com/images/icons256/58907.png?d=1513523636',
-                        alt: '',
-                        className: 'circle responsive-img' })
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'i',
+                        { className: 'material-icons white', style: { fontSize: "100px", marginTop: "8px" } },
+                        'account_box'
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'p',
+                        { className: 'white-text' },
+                        user ? user.username : ""
+                    )
                 )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -16312,35 +16325,34 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'select',
                     { value: profile.id || "", onChange: e => this.props.onSelect(e.target.value), className: 'browser-default' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'option',
-                        { value: '' },
-                        'Choose your option'
-                    ),
-                    profiles && profiles.map(pr => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    profiles && profiles.length > 0 ? profiles.map(pr => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'option',
                         { key: pr.id, value: pr.id },
                         pr.name
-                    ))
+                    )) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'option',
+                        { value: '' },
+                        'No profiles added'
+                    )
                 )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'row' },
+                this.props.loading && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'progress' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'indeterminate' })
+                ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
                     { className: 'waves-effect waves-light btn modal-trigger', 'data-target': `${this.state.modalId}` },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'i',
-                        { className: 'material-icons left' },
+                        { className: 'material-icons right' },
                         'add'
                     ),
                     'Add Profile'
-                ),
-                this.props.loading && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'progress' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'indeterminate' })
                 )
             )
         );
@@ -16594,17 +16606,21 @@ class ProfileModal extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__File__ = __webpack_require__(121);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Folder__ = __webpack_require__(122);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__FileDetailModal__ = __webpack_require__(123);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__UploadModal__ = __webpack_require__(124);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ItemMenu__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Loading__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FolderContents__ = __webpack_require__(127);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__FileDetailModal__ = __webpack_require__(123);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__UploadModal__ = __webpack_require__(124);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ItemMenu__ = __webpack_require__(125);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Loading__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Breadcrumbs__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Utils__ = __webpack_require__(16);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+
+
 
 
 
@@ -16642,7 +16658,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
                     try {
 
-                        let res = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(`/api/profile/fileDetail`, { params: data });
+                        let res = yield __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get(`/api/profile/fileDetail`, { params: data });
                         if (res.data) {
                             let fileInfo = res.data;
                             _this.setState({ fileInfo }, function () {
@@ -16670,7 +16686,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                     };
                     _this.setState({ loading: true });
                     try {
-                        let res = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get(`/api/profile/openFolder`, { params: data });
+                        let res = yield __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get(`/api/profile/openFolder`, { params: data });
                         if (res.data) {
                             let { dirname, files } = res.data;
                             _this.setState({ files, cwd: dirname });
@@ -16699,20 +16715,6 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             this.openFolder(path);
         };
 
-        this.mapPath = (seg, i) => {
-            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'a',
-                { key: i, href: seg ? "#!" : null,
-                    onClick: this.traverse.bind(this, seg, true),
-                    className: 'breadcrumb' },
-                seg ? seg : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'i',
-                    { className: 'material-icons' },
-                    'home'
-                )
-            );
-        };
-
         this.uploadFiles = (() => {
             var _ref3 = _asyncToGenerator(function* (files) {
                 let params = {
@@ -16723,7 +16725,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 files.forEach(function (file, i) {
                     formData.append(`file ${i}`, file);
                 });
-                let response = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.post("/api/profile/upload", formData, {
+                let response = yield __WEBPACK_IMPORTED_MODULE_3_axios___default.a.post("/api/profile/upload", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }, params
@@ -16747,12 +16749,20 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         this.deleteItem = (() => {
             var _ref4 = _asyncToGenerator(function* (item) {
                 console.log(item);
-                let params = {
+
+                let data = {
                     path: _this.segments.concat(item.name).join("/"),
-                    id: _this.props.profile.id,
-                    item
+                    id: _this.props.profile.id
+
                 };
-                let response = yield __WEBPACK_IMPORTED_MODULE_4_axios___default.a.get("/api/profile/delete", params);
+                let response = yield __WEBPACK_IMPORTED_MODULE_3_axios___default.a.get("/api/profile/delete", { params: data });
+                if (response.data) {
+                    console.log(response.data);
+                    Object(__WEBPACK_IMPORTED_MODULE_8__Utils__["b" /* Toast */])(response.data);
+                    _this.setState({ files: _this.state.files.filter(function (f) {
+                            return f.name != item.name;
+                        }) });
+                }
             });
 
             return function (_x4) {
@@ -16768,7 +16778,8 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             x: "",
             y: "",
             selectedItem: null,
-            loading: true
+            loading: true,
+            files: []
         };
     }
     get segments() {
@@ -16776,68 +16787,87 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
     }
 
     componentDidMount() {
-        $(`#${this.modalId}`).modal();
-        $(`#${this.uploadModalId}`).modal();
-
         document.onclick = () => {
             this.setState({ x: null, y: null });
         };
     }
 
     render() {
-        let { openFolder, profile } = this.props;
+        let { openFolder, profile, profiles } = this.props;
         let { fileInfo, files, cwd, selectedItem, loading } = this.state;
+
+        if (!profile.id) {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'window preloader-background white' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'h3',
+                    { className: 'grey-text' },
+                    'No Profile Selected'
+                )
+            );
+        }
 
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            selectedItem && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__ItemMenu__["a" /* default */], _extends({}, this.state, {
+            selectedItem && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__ItemMenu__["a" /* default */], _extends({}, this.state, {
                 deleteItem: this.deleteItem,
                 showDetails: this.openFile,
                 item: selectedItem
             })),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__UploadModal__["a" /* default */], { modalId: this.uploadModalId, cwd: cwd, uploadFiles: this.uploadFiles }),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
-            !loading ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__UploadModal__["a" /* default */], { modalId: this.uploadModalId, uploadFiles: this.uploadFiles }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__FileDetailModal__["a" /* default */], { profileId: profile.id, modalId: this.modalId, fileInfo: fileInfo }),
+            loading && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__Loading__["a" /* default */], null) || __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'card purple darken-1 window' },
+                { className: 'card purple darken-2 window' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'div',
                     { className: 'card-content white-text' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'span',
+                        { className: 'card-title' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7__Breadcrumbs__["a" /* default */], { links: this.segments, onClick: this.traverse })
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'button',
-                        { className: 'btn modal-trigger', 'data-target': `${this.uploadModalId}` },
+                        { className: 'btn modal-trigger', 'data-target': this.uploadModalId },
+                        'Upload',
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'i',
-                            { className: 'material-icons' },
+                            { className: 'material-icons right' },
                             'cloud_upload'
                         )
                     ),
+                    '\xA0',
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'button',
                         { className: 'btn', onClick: this.openFolder.bind(this, this.state.cwd) },
+                        'Refresh  ',
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'i',
-                            { className: 'material-icons' },
-                            'cached'
+                            { className: 'material-icons right' },
+                            'refresh'
                         )
                     ),
+                    '\xA0',
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'span',
-                        { className: 'card-title' },
-                        this.segments && this.segments.map(this.mapPath)
-                    ),
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'explorer' },
+                        'button',
+                        { className: 'btn', onClick: this.openFolder.bind(this, this.state.cwd) },
+                        'Create Folder  ',
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'collection' },
-                            files && files.sort(fileCompare).map((item, i) => item.isFile ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__File__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.openFile.bind(this, item.name), file: item }) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__Folder__["a" /* default */], { key: i, ctxMenu: this.menu, onClick: this.traverse.bind(this, item.name), folder: item }))
+                            'i',
+                            { className: 'material-icons right' },
+                            'create_new_folder'
                         )
-                    )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FolderContents__["a" /* default */], {
+                        contents: files,
+                        openFile: this.openFile,
+                        openFolder: this.traverse,
+                        openContextMenu: this.menu })
                 )
-            ) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7__Loading__["a" /* default */], null)
+            )
         );
     }
 }
@@ -16856,67 +16886,8 @@ let fileCompare = (a, b) => {
 /* harmony default export */ __webpack_exports__["a"] = (Explorer);
 
 /***/ }),
-/* 121 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-
-const File = ({ file, onClick, ctxMenu }) => {
-    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "a",
-        { className: "collection-item", onClick: onClick, onContextMenu: e => ctxMenu(e, file) },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "span",
-            { className: "title" },
-            file.name
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "div",
-            { className: "secondary-content" },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                "i",
-                { className: "material-icons" },
-                "insert_drive_file"
-            )
-        )
-    );
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (File);
-
-/***/ }),
-/* 122 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-
-
-const Folder = ({ folder, onClick, ctxMenu }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    "a",
-    { className: "collection-item", onClick: onClick, onContextMenu: e => ctxMenu(e, folder) },
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "span",
-        { className: "title" },
-        folder.name
-    ),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        "div",
-        { className: "secondary-content" },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            "i",
-            { className: "material-icons" },
-            "folder"
-        )
-    )
-);
-
-/* harmony default export */ __webpack_exports__["a"] = (Folder);
-
-/***/ }),
+/* 121 */,
+/* 122 */,
 /* 123 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -16935,72 +16906,75 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 
-const FileDetailModal = ({ modalId, fileInfo, profileId }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    'div',
-    { id: modalId, className: 'modal' },
-    fileInfo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+const FileDetailModal = ({ modalId, fileInfo, profileId }) => {
+    $(`#${modalId}`).modal();
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
-        { className: 'modal-content' },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h4',
-            null,
-            fileInfo.name
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        { id: modalId, className: 'modal' },
+        fileInfo && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'row' },
+            { className: 'modal-content' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'h4',
+                null,
+                fileInfo.name
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('hr', null),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'col s4' },
-                'Size:'
+                { className: 'row' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s4' },
+                    'Size:'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s8' },
+                    fileInfo.size,
+                    'bytes'
+                )
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'col s8' },
-                fileInfo.size,
-                'bytes'
+                { className: 'row' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s4' },
+                    'Path:'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s8' },
+                    fileInfo.path
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'row' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s4' },
+                    'Last Modified:'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'col s8' },
+                    new Date(fileInfo.last_modified).toLocaleString()
+                )
             )
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'row' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'col s4' },
-                'Path:'
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'col s8' },
-                fileInfo.path
-            )
-        ),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'row' },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'col s4' },
-                'Last Modified:'
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'col s8' },
-                new Date(fileInfo.last_modified).toLocaleString()
+            { className: 'modal-footer' },
+            fileInfo && fileInfo.isFile && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'a',
+                { href: '#!', onClick: download.bind(_this, profileId, fileInfo.path), className: 'modal-action waves-effect waves-green btn' },
+                'Download'
             )
         )
-    ),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'div',
-        { className: 'modal-footer' },
-        fileInfo && fileInfo.isFile && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'a',
-            { href: '#!', onClick: download.bind(_this, profileId, fileInfo.path), className: 'modal-action waves-effect waves-green btn' },
-            'Download'
-        )
-    )
-);
+    );
+};
 const download = (() => {
     var _ref = _asyncToGenerator(function* (id, filePath) {
 
@@ -17063,19 +17037,9 @@ class UploadModal extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         };
     }
 
-    /*  uploadFiles=async()=>{
-         const formData = new FormData();
-         this.state.fileQueue.forEach((file,i)=>{
-             formData.append(`file ${i}`,file)
-         })
-         let response=await axios.post("/api/profile/upload",formData,{
-             headers: {
-               'Content-Type': 'multipart/form-data'
-             },params:{path:this.props.cwd}
-         })
-         console.log(response)
-         
-     } */
+    componentDidMount() {
+        $(`#${this.props.modalId}`).modal();
+    }
 
     render() {
         let { fileQueue } = this.state;
@@ -17201,6 +17165,101 @@ const ItemMenu = ({ item, x, y, deleteItem, showDetails }) => __WEBPACK_IMPORTED
 );
 
 /* harmony default export */ __webpack_exports__["a"] = (ItemMenu);
+
+/***/ }),
+/* 126 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+var _this = this;
+
+
+const Breadcrumbs = ({ onClick, links }) => links.map((link, i) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+   "a",
+   { key: i, href: link ? "#!" : null,
+      onClick: onClick.bind(_this, link, true),
+      className: "breadcrumb" },
+   link || __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+      "i",
+      { className: "material-icons" },
+      "home"
+   )
+));
+/* harmony default export */ __webpack_exports__["a"] = (Breadcrumbs);
+
+/***/ }),
+/* 127 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__FolderItem__ = __webpack_require__(128);
+
+
+
+const FolderContents = ({ contents, openContextMenu, openFile, openFolder }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    'div',
+    { className: 'explorer white' },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        'div',
+        { className: 'collection' },
+        contents.sort(fileSort).map((item, i) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__FolderItem__["a" /* default */], {
+            key: i,
+            item: item,
+            onContextMenu: openContextMenu,
+            onClick: item.isFile ? openFile : openFolder }))
+    )
+);
+
+let fileSort = (a, b) => {
+
+    if (a.isFile == b.isFile) {
+        if (a.name.toLocaleLowerCase() < b.name.toLocaleLowerCase()) {
+            return -1;
+        } else {
+            return 1;
+        }
+    } else if (a.isFile && !b.isFile) {
+        return 1;
+    } else {
+        return -1;
+    }
+};
+/* harmony default export */ __webpack_exports__["a"] = (FolderContents);
+
+/***/ }),
+/* 128 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+var _this = this;
+
+
+const FolderItem = ({ onClick, item, onContextMenu }) => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    "a",
+    { className: "collection-item", onClick: onClick.bind(_this, item.name), onContextMenu: e => onContextMenu(e, item) },
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "span",
+        { className: "title" },
+        item.name
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        "div",
+        { className: "secondary-content" },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            "i",
+            { className: "material-icons" },
+            item.isFile ? "insert_drive_file" : "folder"
+        )
+    )
+);
+
+/* harmony default export */ __webpack_exports__["a"] = (FolderItem);
 
 /***/ })
 /******/ ]);

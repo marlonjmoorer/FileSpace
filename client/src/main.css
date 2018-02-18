@@ -27,11 +27,12 @@ html,body{
     padding: 5px;
 }
 .explorer{
-    height:375px;
+    height: 400px;
     overflow: scroll;
+    margin-top: 8px;
 }
 .explorer > .collection{
-    margin-bottom: 0%
+    margin: 0%
 }
 .window{
     height: 86vh 

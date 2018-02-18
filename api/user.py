@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, request, make_response,session
+from flask import Blueprint, request, make_response,session,jsonify
 import re
 from .models.UserModel import UserModel
 
@@ -64,7 +64,15 @@ def login():
 
         return  make_response(json.dumps(errorMessages), 500)
 
+@user_api.route("/info")
+def userInfo():
+    userId = session["userId"]
+    user=UserModel.getById(userId)
 
+    if user:
+        return jsonify({
+            "username":user.email
+        })
 
 
 

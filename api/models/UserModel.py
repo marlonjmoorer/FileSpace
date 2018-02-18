@@ -20,3 +20,7 @@ class UserModel(BaseModel):
     def getByEmail(email):
         return  UserModel.query.filter_by(email=email).first()
 
+    @staticmethod
+    def getById(id):
+        return UserModel.query.filter_by(id=id).first()
+

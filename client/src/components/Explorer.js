@@ -1,11 +1,14 @@
 import React,{Component} from 'react'
-import File from './File';
-import Folder from './Folder';
+
+import FolderContents from './FolderContents';
+
 import FileDetailModal from './FileDetailModal';
 import axios from 'axios';
 import UploadModal from './UploadModal';
 import ItemMenu from './ItemMenu';
 import Loading from './Loading';
+import Breadcrumbs from './Breadcrumbs';
+import { Toast } from './Utils';
 
 class Explorer extends Component {
     constructor(props) {
@@ -18,7 +21,8 @@ class Explorer extends Component {
             x:"",
             y:"",
             selectedItem:null,
-            loading:true
+            loading:true,
+            files:[]
         };
     }
     get segments(){
@@ -35,14 +39,11 @@ class Explorer extends Component {
         }
     }
     componentDidMount() {
-        $(`#${this.modalId}`).modal();
-        $(`#${this.uploadModalId}`).modal();
-
         document.onclick=()=>{
             this.setState({x:null,y:null})
         }
-        
     }
+
 
     openFile=async(path)=>{
         if(path){
@@ -59,12 +60,10 @@ class Explorer extends Component {
                   this.setState({fileInfo},()=>{
                      $(`#${this.modalId}`).modal('open')
                   })
-                  
                 } 
             } catch (error) {
                 console.log(error)
             }
-         
         }
     }
     openFolder=async(path)=>{
@@ -98,15 +97,7 @@ class Explorer extends Component {
         }
         this.openFolder(path)
     }
-    mapPath=(seg,i) =>{                
-        return(
-        <a key={i} href={seg?"#!":null }
-            onClick={this.traverse.bind(this,seg,true)} 
-            className="breadcrumb">
-            {seg?seg:<i className="material-icons">home</i>}
-        </a>)
-    }
-   
+ 
     uploadFiles=async(files)=>{
         let params={
             path:this.state.cwd,
@@ -132,17 +123,29 @@ class Explorer extends Component {
     }
     deleteItem= async(item)=>{
         console.log(item)
-        let params={
+    
+        let data={
             path:this.segments.concat(item.name).join("/"),
             id:this.props.profile.id,
-            item
+            
+        } 
+        let response= await axios.get("/api/profile/delete",{params:data})
+        if(response.data){
+            console.log(response.data)
+            Toast(response.data)
+            this.setState({files:this.state.files.filter(f=>f.name!=item.name)})
         }
-        let response= await axios.get("/api/profile/delete",params)
     }
 
     render(){
-        let {openFolder,profile}= this.props
+        let {openFolder,profile,profiles}= this.props
         let {fileInfo,files,cwd,selectedItem,loading}=this.state
+
+        if(!profile.id){
+            return <div className="window preloader-background white">
+                    <h3 className="grey-text" >No Profile Selected</h3>
+            </div>
+        }
        
 
         return (
@@ -154,35 +157,35 @@ class Explorer extends Component {
                 showDetails={this.openFile}
                 item={selectedItem}
                 />}
-               <UploadModal  modalId={this.uploadModalId} cwd={cwd} uploadFiles={this.uploadFiles}/>
+               <UploadModal  modalId={this.uploadModalId} uploadFiles={this.uploadFiles}/>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
-                {!loading ? <div className="card purple darken-1 window">
+                {
+                    (loading&& <Loading/>) ||
+                 <div className="card purple darken-2 window">
                     <div className="card-content white-text">
-                    
-                    <button className="btn modal-trigger" data-target={`${this.uploadModalId}`} >
-                       <i className="material-icons">cloud_upload</i>
+                    <span className="card-title">
+                           <Breadcrumbs links={this.segments} onClick={this.traverse} />
+                    </span>
+                     <button className="btn modal-trigger"  data-target={this.uploadModalId} >
+                       Upload<i className="material-icons right">cloud_upload</i>
                     </button>
+                    &nbsp;
                     <button className="btn" onClick={this.openFolder.bind(this,this.state.cwd)} >
-                       <i className="material-icons">cached</i>
-                    </button>
-                        <span className="card-title">
-                            {this.segments&& this.segments.map(this.mapPath)}
-                        </span>
-                        <div className="explorer">
-                            <div className="collection">
-                                {files && files
-                                    .sort(fileCompare)
-                                    .map((item,i) => 
-                                       item.isFile?
-                                       <File key={i} ctxMenu={this.menu} onClick={this.openFile.bind(this,item.name)} file={item}  />: 
-                                       <Folder key={i} ctxMenu={this.menu}  onClick={this.traverse.bind(this,item.name)} folder={item}/>
-                                    )}
-                            </div>
-                        </div>
-    
+                      Refresh  <i className="material-icons right">refresh</i>
+                    </button> 
+                    &nbsp;
+                    <button className="btn" onClick={this.openFolder.bind(this,this.state.cwd)} >
+                      Create Folder  <i className="material-icons right">create_new_folder</i>
+                    </button> 
+                       
+                       <FolderContents 
+                            contents={files} 
+                            openFile={this.openFile}
+                            openFolder={this.traverse}
+                            openContextMenu={this.menu} />
                     </div>
                     
-                </div>:<Loading/>}
+                </div>}
     
             </div>
         )

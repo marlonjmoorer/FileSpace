@@ -16,7 +16,11 @@ const Nav = (props) => {
                 <li><a onClick={logout} >Logout</a></li>
             </ul>
             <div className="nav-wrapper purple darken-4">
-                <a href="#" className="brand-logo">Logo</a>
+            
+              
+                <a href="#" className="brand-logo center">
+                FileSpot 
+                </a>
                 <ul id="nav-mobile" className="right hide-on-small-only">
                     { loggedIn &&  
 

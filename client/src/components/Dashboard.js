@@ -41,9 +41,20 @@ class  Dashboard extends Component {
             console.log(error)
         }
     }
+    getUserName=async()=>{
+        try {
+            let res= await axios.get("/api/user/info")
+            if(res.data){
+                this.setState({user:res.data})
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     componentDidMount() {
         this.loadProfiles()
+        this.getUserName()
     }
 
    render(){
@@ -53,7 +64,7 @@ class  Dashboard extends Component {
                 <div className="col s3 black" style={{height: '89vh'}}>
                     <SideBar {...this.state}  loadProfiles={this.loadProfiles} onSelect={this.selectProfile}/>
                 </div>
-                <div className="col s9">
+                <div className="col s9" style={{ margin: 0,padding:0}} >
                     <Explorer {...this.state} openFile={this.openFile} openFolder={this.openFolder} />
                 </div>
             </div>

@@ -209,7 +209,7 @@ def delete():
 
         except Exception as ex:
             print(ex)
-    return Response("Done")
+    return Response("%s  has been deleted"%path)
 
 
 def verify():
