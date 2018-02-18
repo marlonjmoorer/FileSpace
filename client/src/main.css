@@ -34,7 +34,7 @@ html,body{
     margin-bottom: 0%
 }
 .window{
-    height: 86vh
+    height: 86vh 
 }
 .tabs .tab a{
     color:#00ACC1;
@@ -56,3 +56,25 @@ html,body{
     bottom: auto !important;
     left:auto !important;
 }
+
+.preloader-background {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	/* position: absolute; */
+    z-index: 999;
+    width: 100%;
+
+    /* height: 86vh; */
+/* 	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0; */
+ 
+}
+.preloader-background>  p {
+    padding-top:120px;
+    margin-left: -60px;
+    opacity: 0.8;
+  } 

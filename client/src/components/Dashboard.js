@@ -9,11 +9,13 @@ class  Dashboard extends Component {
 
     state={
         profile:{},
-        profiles:[]
+        profiles:[],
+        loading:false
     }
     selectProfile=async(id)=>{
         console.log(id)
         if(id){
+           this.setState({loading:true})
             try {
                 let res= await axios.get(`/api/profile/getProfile`,{params:{id}})
                 if(res.data){
@@ -23,6 +25,7 @@ class  Dashboard extends Component {
             } catch (error) {
                 console.log(error)
             }
+            this.setState({loading:false})
         }
     }
    

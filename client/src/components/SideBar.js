@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import axios from 'axios'
 import ProfileModal from './ProfileModal'
+import {Toast} from './Utils'
+import Loading from './Loading'
 
 
 class SideBar extends Component {
@@ -13,7 +15,7 @@ class SideBar extends Component {
         modalId:"addModal",
         errors:[],
         profileId:'',
-        testMessage:'',
+        testMessage:''
     }
     componentDidMount(){
        
@@ -25,17 +27,19 @@ class SideBar extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-       // this.s
+        const {profile}=this.props
+        console.log(this.props)
+        console.log(nextProps)
+        if(!profile.id && nextProps.profiles.length > 0 && this.props.profiles.length==0){
+            
+           this.props.onSelect(nextProps.profiles[0].id)
+        } 
     }
 
     
     componentDidUpdate(prevProps, prevState) {
         
-      const {profiles,profile}=this.props
-      if(!profile.id&&profiles.length > 0){
-          this.select.value=profiles[0].id
-          this.props.onSelect(profiles[0].id)
-      } 
+      
     }
     testConnection= async(data) => {
         console.log(data)
@@ -43,14 +47,14 @@ class SideBar extends Component {
             let response = await axios.post("/api/profile/testConnection", data)
 
             if (response.data) {
-              this.setState({testMessage:response.data})
+              Toast(response.data)
             }
         } catch (error) {
 
             console.log(error)
             if(error.response){
                 console.log(error.response.data)
-                this.setState({testMessage:error.response.data})
+                Toast(error.response.data)
             }
         }
 
@@ -104,18 +108,20 @@ class SideBar extends Component {
                 </div>
                 <div className="row">
                     <label>Profile</label>
-                    <select ref={(i)=>{this.select=i}} onChange={e=>this.props.onSelect(e.target.value)} className="browser-default">
-                        <option value=""  defaultValue>Choose your option</option>
+                    <select value={profile.id||""} onChange={e=>this.props.onSelect(e.target.value)} className="browser-default">
+                        <option value="" >Choose your option</option>
                         {profiles && profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>)}
                     </select>
                 </div>
                 <div className="row">
                     <a className="waves-effect waves-light btn modal-trigger" data-target={`${this.state.modalId}`}>
                     <i className="material-icons left">add</i>Add Profile</a>
+                   {this.props.loading &&
+                   <div className="progress">
+                        <div className="indeterminate"></div>
+                    </div>}
                 </div>
-                <div className="row">
-                    
-                </div>
+                
             </div>
         )
 

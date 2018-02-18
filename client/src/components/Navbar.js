@@ -17,7 +17,7 @@ const Nav = (props) => {
             </ul>
             <div className="nav-wrapper purple darken-4">
                 <a href="#" className="brand-logo">Logo</a>
-                <ul id="nav-mobile" className="right hide-on-med-and-down">
+                <ul id="nav-mobile" className="right hide-on-small-only">
                     { loggedIn &&  
 
                         <li>

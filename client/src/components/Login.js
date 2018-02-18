@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import { Toast } from './Utils';
+import { Toast,AddFormValidation } from './Utils';
 
 
 export default class Login extends Component {
@@ -9,29 +9,16 @@ export default class Login extends Component {
       
     }
      componentDidMount() {
-        $("#loginForm").validate({
-            rules: {
+        AddFormValidation("loginForm", {
                 email: {
                     required: true,
                     email:true
                 },
                 password: {
                     required: true,
-                    minlength: 5
+                    minlength: 8
                 },            
-            },
-            errorClass: "invalid",
-            errorElement : 'span',
-            errorPlacement: function(error, element) {
-              var placement = $(element).data('error');
-             
-              if (placement) {
-                $(placement).append(error)
-              } else {
-                error.insertAfter(element);
-              }
-            }
-         });
+        });
         
      }
 

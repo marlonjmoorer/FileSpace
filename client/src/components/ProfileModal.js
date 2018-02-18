@@ -1,4 +1,5 @@
 import React,{Component} from 'react'
+import { AddFormValidation } from './Utils';
 
 
 class ProfileModal extends Component{
@@ -11,21 +12,38 @@ class ProfileModal extends Component{
 
     }
     componentDidMount() {
+        
+        this.state.form.set('name','')
+        this.state.form.set('host','')
+        this.state.form.set('port','')
+        this.state.form.set('username','')
+        this.state.form.set('password','')
+        AddFormValidation("profileForm",
+        {
+            name:{required: true},
+            host:{required: true},
+            port:{
+                number:true,
+                minlength:2,
+                maxlength:4
+            },
+            username:{required:true},
+            password:{required:true}
+                     
+        })
+        
 
-        this.state.form.append('name','')
-        this.state.form.append('host','')
-        this.state.form.append('port','')
-        this.state.form.append('username','')
-        this.state.form.append('password','')
     }
     handleChange=(e)=>{
         var form=this.state.form
-        form.append(e.target.name,e.target.value)
+        form.set(e.target.name,e.target.value)
         this.setState({form})
     }
     onClick=(e)=>{
         e.preventDefault()
-        this.props.testConnection(this.state.form)
+        $("#profileForm").validate()
+        if(!$("#profileForm").valid()){return}
+        //this.props.testConnection(this.state.form)
     }
 
     render(){
@@ -42,11 +60,11 @@ class ProfileModal extends Component{
                 
                  
                  <p></p>
-                 <form onSubmit={this.onSubmit} className="col s12 ">
+                 <form id="profileForm" onSubmit={this.onSubmit} className="col s12 ">
                      <div className="row">
                          <div className="input-field col s10">
                              <input onChange={this.handleChange} name='name' id="name" type="text" className="validate"/>
-                             <label htmlFor="name">Entry Name</label>
+                             <label  htmlFor="name">Entry Name</label>
                          </div>
                          <div className="input-field col s10">
                              <input onChange={this.handleChange} name='host' id="host" type="text" className="validate"/>

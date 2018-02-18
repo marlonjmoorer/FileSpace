@@ -85,20 +85,11 @@ def getProfile():
         try:
 
             sftp=profile.connect()
-            files=[]
             sftp.cwd(".")
             dir=sftp.getcwd()
-            list = sftp.listdir(dir)
-            for item in list:
-                files.append({
-                    'name': item,
-                    'isFile': sftp.isfile(item),
-                    # 'stat':sftp.stat(item)
-                })
-
-            return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir,"files":files}})
+            return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir}})
         except Exception as ex:
-            return Response(False)
+            return Response(ex.message)
     else:
          return jsonify("Invalid profile"),500
 
@@ -106,7 +97,7 @@ def getProfile():
 @login_required
 def openFolder():
 
-    path=request.args["path"]
+    path=request.args["path"] or "."
 
     userId, profile = verify()
     if userId and profile:

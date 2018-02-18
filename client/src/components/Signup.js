@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import { Toast } from './Utils';
+import { Toast,AddFormValidation } from './Utils';
 export default class Signup extends Component {
 
     state={
       
     }
     componentDidMount() {
-        $("#signupForm").validate({
-            rules: {
+        AddFormValidation("signupForm", {
                 email: {
                     required: true,
                     email:true
@@ -21,19 +20,7 @@ export default class Signup extends Component {
                     required: true,
                     equalTo: "#password"
                 },               
-            },
-            errorClass: "invalid",
-            errorElement : 'span',
-            errorPlacement: function(error, element) {
-              var placement = $(element).data('error');
-             
-              if (placement) {
-                $(placement).append(error)
-              } else {
-                error.insertAfter(element);
-              }
-            }
-         });
+            })
     }
 
     onSubmit=async(e)=>{

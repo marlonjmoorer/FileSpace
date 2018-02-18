@@ -5,29 +5,32 @@ import FileDetailModal from './FileDetailModal';
 import axios from 'axios';
 import UploadModal from './UploadModal';
 import ItemMenu from './ItemMenu';
+import Loading from './Loading';
 
 class Explorer extends Component {
     constructor(props) {
         super(props);
         this.modalId='detail'
         this.uploadModalId="upload"
-        let {profile}=props
         
         this.state = {
             cwd:"",
             x:"",
             y:"",
-            selectedItem:null
+            selectedItem:null,
+            loading:true
         };
     }
     get segments(){
        return this.state.cwd? this.state.cwd.split("/"):[]
     }
     componentWillReceiveProps = (nextProps) => {
+       
         if(nextProps.profile!=this.props.profile){
             this.setState({
                 cwd:nextProps.profile.homeDir,
-                files:nextProps.profile.files
+            },()=>{
+                this.openFolder(this.state.cwd)
             })
         }
     }
@@ -47,7 +50,9 @@ class Explorer extends Component {
                 path:`${this.state.cwd}/${path}`,
                 id:this.props.profile.id
             }
+            
             try {
+                
                 let res= await axios.get(`/api/profile/fileDetail`,{params:data})
                 if(res.data){
                   let fileInfo=res.data
@@ -59,6 +64,7 @@ class Explorer extends Component {
             } catch (error) {
                 console.log(error)
             }
+         
         }
     }
     openFolder=async(path)=>{
@@ -68,6 +74,7 @@ class Explorer extends Component {
                 path,
                 id:this.props.profile.id
             }
+            this.setState({loading:true})
             try {
                 let res= await axios.get(`/api/profile/openFolder`,{params:data})
                 if(res.data){
@@ -77,6 +84,7 @@ class Explorer extends Component {
             } catch (error) {
                 console.log(error)
             }
+            this.setState({loading:false})
         }
     }
     traverse=(folder,ascend)=>{
@@ -134,7 +142,9 @@ class Explorer extends Component {
 
     render(){
         let {openFolder,profile}= this.props
-        let {fileInfo,files,cwd,selectedItem}=this.state
+        let {fileInfo,files,cwd,selectedItem,loading}=this.state
+       
+
         return (
             <div>
                 {selectedItem && 
@@ -146,7 +156,7 @@ class Explorer extends Component {
                 />}
                <UploadModal  modalId={this.uploadModalId} cwd={cwd} uploadFiles={this.uploadFiles}/>
                <FileDetailModal profileId={profile.id} modalId={this.modalId} fileInfo={fileInfo} />
-                <div className="card purple darken-1 window">
+                {!loading ? <div className="card purple darken-1 window">
                     <div className="card-content white-text">
                     
                     <button className="btn modal-trigger" data-target={`${this.uploadModalId}`} >
@@ -172,7 +182,7 @@ class Explorer extends Component {
     
                     </div>
                     
-                </div>
+                </div>:<Loading/>}
     
             </div>
         )
