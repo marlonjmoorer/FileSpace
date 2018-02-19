@@ -13,7 +13,7 @@ const NewFolderModal = ({modalId,createFolder}) =>
         </div>
         <div className="modal-footer">
             <a className="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <a onClick={e=>createFolder(name)} className="modal-action modal-close waves-effect waves-green btn-flat">Save</a>
+            <a onClick={createFolder.bind(this,name)} className="modal-action modal-close waves-effect waves-green btn-flat">Save</a>
         </div>
     </div>
     );

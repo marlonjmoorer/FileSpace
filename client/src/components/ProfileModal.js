@@ -43,7 +43,7 @@ class ProfileModal extends Component{
         e.preventDefault()
         $("#profileForm").validate()
         if(!$("#profileForm").valid()){return}
-        //this.props.testConnection(this.state.form)
+        this.props.testConnection(this.state.form)
     }
 
     render(){
@@ -60,7 +60,7 @@ class ProfileModal extends Component{
                 
                  
                  <p></p>
-                 <form id="profileForm" onSubmit={this.onSubmit} className="col s12 ">
+                 <form id="profileForm" onSubmit={onSubmit} className="col s12 ">
                      <div className="row">
                          <div className="input-field col s10">
                              <input onChange={this.handleChange} name='name' id="name" type="text" className="validate"/>

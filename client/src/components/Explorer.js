@@ -37,8 +37,7 @@ class Explorer extends Component {
             : []
     }
     componentWillReceiveProps = (nextProps) => {
-
-        if (nextProps.profile != this.props.profile) {
+        if (nextProps.profile.id != this.props.profile.id) {
             this.setState({
                 cwd: nextProps.profile.homeDir
             }, () => {

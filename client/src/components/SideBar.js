@@ -4,7 +4,7 @@ import ProfileModal from './ProfileModal'
 import {Toast} from './Utils'
 import Loading from './Loading'
 
-
+const modalId="addModal"
 class SideBar extends Component {
 
     constructor(props){
@@ -12,14 +12,12 @@ class SideBar extends Component {
     }
 
     state={
-        modalId:"addModal",
         errors:[],
         profileId:'',
-        
     }
     componentDidMount(){
        
-        $(`#${this.state.modalId}`).modal({
+        $(`#${modalId}`).modal({
             complete:()=>{
                this.setState({errors:[]})
             }
@@ -28,17 +26,12 @@ class SideBar extends Component {
 
     componentWillReceiveProps(nextProps) {
         const {profile}=this.props
-        if(!profile.id && nextProps.profiles.length > 0 && this.props.profiles.length==0){
+        if(!profile.id && nextProps.profiles.length!=this.props.profiles.length){
             
-           this.props.onSelect(nextProps.profiles[0].id)
+       //    this.props.onSelect(nextProps.profiles[0].id)
         } 
     }
 
-    
-    componentDidUpdate(prevProps, prevState) {
-        
-      
-    }
     testConnection= async(data) => {
         console.log(data)
         try {
@@ -69,7 +62,7 @@ class SideBar extends Component {
             if (response.data.success) {
                 this.props.loadProfiles()
                 this.setState({errors:[]})
-                $(`#${this.state.modalId}`).modal('close');
+                $(`#${modalId}`).modal('close');
             }
         } catch (error) {
 
@@ -79,10 +72,25 @@ class SideBar extends Component {
                 this.setState({errors:error.response.data.messages})
             }
         }
-       
+    }
+
+    removeProfile=async()=>{
+            if(confirm(`Are you sure you want to delete this profile? :${this.props.profile.name}`)){
+                try {
+                    let response = await axios.get("/api/profile/removeProfile",{params:{id:this.props.profile.id}})
         
-
-
+                    if (response.data) {
+                        this.props.loadProfiles()                
+                        Toast(response.data)
+                    }
+                } catch (error) {
+                    console.log(error)
+                    if(error.response){
+                        console.log(error.response.data)
+                       
+                    }
+                }
+            }
     }
     render() {
         const {profiles,profile,user,loading}=this.props
@@ -91,7 +99,7 @@ class SideBar extends Component {
                <ProfileModal 
                onSubmit={this.addProfile} 
                errors={this.state.errors} 
-               modalId={this.state.modalId}
+               modalId={modalId}
 
                testConnection={this.testConnection} />
                <div className="row">
@@ -106,7 +114,6 @@ class SideBar extends Component {
                 <div className="row">
                     <label>Profile</label>
                     <select value={profile.id||""} onChange={e=>this.props.onSelect(e.target.value)} className="browser-default">
-                        
                         {profiles&& profiles.length>0? profiles.map(pr => <option key={pr.id} value={pr.id}>{pr.name}</option>):<option value="" >No profiles added</option>}
                     </select>
                 </div>
@@ -115,15 +122,15 @@ class SideBar extends Component {
                         <div className="progress">
                             <div className="indeterminate"></div>
                         </div>}
-                    <a className={(loading?"disabled ":"")+"col m6 s12 waves-effect waves-light btn modal-trigger"} data-target={`${this.state.modalId}`}>
+                    <a className={(loading?"disabled ":"")+"col m6 s12 waves-effect waves-light btn modal-trigger"} data-target={`${modalId}`}>
                         <i className="material-icons right">add</i>Add Profile
                     </a>
-                    
-                    <a  className={(loading || profiles.length==0 ?"disabled ":"")+"col m6 s12 waves-effect waves-light red btn "}>
+                    <a  onClick={this.removeProfile}
+                        className={(loading || profiles.length==0 ?"disabled ":"")+"col m6 s12 waves-effect waves-light red btn "}>
                         <i className="material-icons right">delete</i> Remove Profile
                     </a>
-                   
                 </div>
+                
                 
             </div>
         )

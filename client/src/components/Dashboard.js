@@ -32,14 +32,19 @@ class  Dashboard extends Component {
     
 
     loadProfiles=async()=>{
+        this.setState({loading:true})
         try {
             let res= await axios.get("/api/profile/getProfiles")
             if(res.data){
                 this.setState({profiles:res.data})
+                if(!res.data.find(p=>p.id==this.state.profile.id)){
+                    this.selectProfile(res.data[0].id)
+                }
             }
         } catch (error) {
             console.log(error)
         }
+        this.setState({loading:false})
     }
     getUserName=async()=>{
         try {

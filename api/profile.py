@@ -66,6 +66,15 @@ def add():
         else:
             return jsonify("Profile not saved"), 500
 
+@profile_api.route("/removeProfile")
+@login_required
+def remove():
+    userId, profile = verify()
+
+    result=ProfileModel.deleteProfileById(profile.id)
+    return Response("%s has been deleted"%profile.name)
+
+
 
 
 
@@ -89,7 +98,7 @@ def getProfile():
             dir=sftp.getcwd()
             return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir}})
         except Exception as ex:
-            return Response(ex.message)
+            return Response(ex.message),500
     else:
          return jsonify("Invalid profile"),500
 

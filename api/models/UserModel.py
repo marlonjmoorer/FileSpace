@@ -16,6 +16,7 @@ class UserModel(BaseModel):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+
     @staticmethod
     def getByEmail(email):
         return  UserModel.query.filter_by(email=email).first()

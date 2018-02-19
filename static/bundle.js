@@ -16131,14 +16131,21 @@ class Dashboard extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 return _ref.apply(this, arguments);
             };
         })(), this.loadProfiles = _asyncToGenerator(function* () {
+            _this.setState({ loading: true });
             try {
                 let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/profile/getProfiles");
                 if (res.data) {
                     _this.setState({ profiles: res.data });
+                    if (!res.data.find(function (p) {
+                        return p.id == _this.state.profile.id;
+                    })) {
+                        _this.selectProfile(res.data[0].id);
+                    }
                 }
             } catch (error) {
                 console.log(error);
             }
+            _this.setState({ loading: false });
         }), this.getUserName = _asyncToGenerator(function* () {
             try {
                 let res = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/user/info");
@@ -16197,6 +16204,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 
 
+const modalId = "addModal";
 class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     constructor(props) {
@@ -16204,10 +16212,8 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
         _this = super(props);
         this.state = {
-            modalId: "addModal",
             errors: [],
             profileId: ''
-
         };
 
         this.testConnection = (() => {
@@ -16247,7 +16253,7 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                     if (response.data.success) {
                         _this.props.loadProfiles();
                         _this.setState({ errors: [] });
-                        $(`#${_this.state.modalId}`).modal('close');
+                        $(`#${modalId}`).modal('close');
                     }
                 } catch (error) {
 
@@ -16263,11 +16269,29 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 return _ref2.apply(this, arguments);
             };
         })();
+
+        this.removeProfile = _asyncToGenerator(function* () {
+            if (confirm(`Are you sure you want to delete this profile? :${_this.props.profile.name}`)) {
+                try {
+                    let response = yield __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/profile/removeProfile", { params: { id: _this.props.profile.id } });
+
+                    if (response.data) {
+                        _this.props.loadProfiles();
+                        Object(__WEBPACK_IMPORTED_MODULE_3__Utils__["b" /* Toast */])(response.data);
+                    }
+                } catch (error) {
+                    console.log(error);
+                    if (error.response) {
+                        console.log(error.response.data);
+                    }
+                }
+            }
+        });
     }
 
     componentDidMount() {
 
-        $(`#${this.state.modalId}`).modal({
+        $(`#${modalId}`).modal({
             complete: () => {
                 this.setState({ errors: [] });
             }
@@ -16276,13 +16300,11 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
 
     componentWillReceiveProps(nextProps) {
         const { profile } = this.props;
-        if (!profile.id && nextProps.profiles.length > 0 && this.props.profiles.length == 0) {
+        if (!profile.id && nextProps.profiles.length != this.props.profiles.length) {
 
-            this.props.onSelect(nextProps.profiles[0].id);
+            //    this.props.onSelect(nextProps.profiles[0].id)
         }
     }
-
-    componentDidUpdate(prevProps, prevState) {}
 
     render() {
         const { profiles, profile, user, loading } = this.props;
@@ -16292,7 +16314,7 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__ProfileModal__["a" /* default */], {
                 onSubmit: this.addProfile,
                 errors: this.state.errors,
-                modalId: this.state.modalId,
+                modalId: modalId,
 
                 testConnection: this.testConnection }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'row' }),
@@ -16346,7 +16368,7 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
-                    { className: (loading ? "disabled " : "") + "col m6 s12 waves-effect waves-light btn modal-trigger", 'data-target': `${this.state.modalId}` },
+                    { className: (loading ? "disabled " : "") + "col m6 s12 waves-effect waves-light btn modal-trigger", 'data-target': `${modalId}` },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'i',
                         { className: 'material-icons right' },
@@ -16356,7 +16378,8 @@ class SideBar extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
-                    { className: (loading || profiles.length == 0 ? "disabled " : "") + "col m6 s12 waves-effect waves-light red btn " },
+                    { onClick: this.removeProfile,
+                        className: (loading || profiles.length == 0 ? "disabled " : "") + "col m6 s12 waves-effect waves-light red btn " },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'i',
                         { className: 'material-icons right' },
@@ -16399,7 +16422,7 @@ class ProfileModal extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
             if (!$("#profileForm").valid()) {
                 return;
             }
-            //this.props.testConnection(this.state.form)
+            this.props.testConnection(this.state.form);
         };
 
         this.state = {
@@ -16448,7 +16471,7 @@ class ProfileModal extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('p', null),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'form',
-                    { id: 'profileForm', onSubmit: this.onSubmit, className: 'col s12 ' },
+                    { id: 'profileForm', onSubmit: onSubmit, className: 'col s12 ' },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'row' },
@@ -16651,8 +16674,7 @@ class Explorer extends __WEBPACK_IMPORTED_MODULE_0_react__["Component"] {
         _this = super(props);
 
         this.componentWillReceiveProps = nextProps => {
-
-            if (nextProps.profile != this.props.profile) {
+            if (nextProps.profile.id != this.props.profile.id) {
                 this.setState({
                     cwd: nextProps.profile.homeDir
                 }, () => {
@@ -17322,6 +17344,8 @@ const FolderItem = ({ onClick, item, onContextMenu }) => __WEBPACK_IMPORTED_MODU
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+var _this = this;
+
 
 const NewFolderModal = ({ modalId, createFolder }) => {
     let name = "New Folder";
@@ -17353,7 +17377,7 @@ const NewFolderModal = ({ modalId, createFolder }) => {
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 "a",
-                { onClick: e => createFolder(name), className: "modal-action modal-close waves-effect waves-green btn-flat" },
+                { onClick: createFolder.bind(_this, name), className: "modal-action modal-close waves-effect waves-green btn-flat" },
                 "Save"
             )
         )
