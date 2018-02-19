@@ -13,9 +13,8 @@ class UploadModal extends Component {
         };
     }
 
-    addFile=({files})=>{
-        console.log(files)
-       this.setState({fileQueue:[...files,...this.state.fileQueue]},()=>{
+    addFile=({target})=>{
+       this.setState({fileQueue:[...target.files,...this.state.fileQueue]},()=>{
            console.log(this.state.fileQueue)
        })
     }
@@ -24,19 +23,10 @@ class UploadModal extends Component {
         fileQueue.splice(index,1)
         this.setState({fileQueue})
     }
-   /*  uploadFiles=async()=>{
-        const formData = new FormData();
-        this.state.fileQueue.forEach((file,i)=>{
-            formData.append(`file ${i}`,file)
-        })
-        let response=await axios.post("/api/profile/upload",formData,{
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },params:{path:this.props.cwd}
-        })
-        console.log(response)
-        
-    } */
+    componentDidMount() {
+        $(`#${this.props.modalId}`).modal()
+    }
+  
 
     render(){
         let {fileQueue}=this.state
@@ -52,7 +42,7 @@ class UploadModal extends Component {
                                     <td>{file.name}</td>
                                     <td>{file.type}</td>
                                     <td>{formatFileSize(file.size)}</td>
-                                    <td><a href="#!" onClick={this.removeFile.bind(this,i)} ><i className="material-icons right ">delete</i></a></td>
+                                    <td><a  onClick={this.removeFile.bind(this,i)} ><i className="material-icons right ">delete</i></a></td>
                                 </tr>
                             )
                         }
@@ -60,9 +50,9 @@ class UploadModal extends Component {
                 </table>
             </div>
             <div className="modal-footer">
-                <input id="file" onChange={(e)=>this.addFile(e.target)} type="file" className="hide"/>
-                <label htmlFor="file" className="btn" ><i className="material-icons left ">add</i> Add </label>
-                <button className={fileQueue.length>0?"btn":"btn disabled"} onClick={this.props.uploadFiles.bind(this,fileQueue)} ><i className="material-icons left ">cloud_upload</i> Upload </button>
+                <input id="file" onChange={this.addFile} type="file" className="hide"/>
+                <label htmlFor="file" className="btn" ><i className="material-icons right ">add</i> Add </label>
+                <button className={fileQueue.length>0?"btn":"btn disabled"} onClick={this.props.uploadFiles.bind(this,fileQueue)} ><i className="material-icons right ">cloud_upload</i> Upload </button>
             </div>
         </div>
 

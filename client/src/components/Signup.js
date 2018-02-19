@@ -1,24 +1,47 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-
+import { Toast,AddFormValidation } from './Utils';
 export default class Signup extends Component {
 
     state={
-        messages:[]
+      
     }
+    componentDidMount() {
+        AddFormValidation("signupForm", {
+                email: {
+                    required: true,
+                    email:true
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                confirm_password: {
+                    required: true,
+                    equalTo: "#password"
+                },               
+            })
+    }
+
     onSubmit=async(e)=>{
         e.preventDefault();
         var data= new FormData(e.target)
+        $(e.target).validate()
+        if(!$(e.target).valid()){return}
         try{
             var res= await axios.post("api/user/signup",data)
             console.log(res)
             document.querySelectorAll("form").forEach(form=>
                 form.reset()
             )
-            this.setState({messages:[]})
+            Toast(res.data)
         }catch(error){
-          var {response}=error
-            this.setState({messages:response.data.errors})
+            if(error.response&&error.response.data){
+                error.response.data.forEach(error=>{
+                   Toast(error)
+                })
+                this.setState({messages:error.response.data})
+            }
         }
         
 
@@ -26,15 +49,8 @@ export default class Signup extends Component {
 
     render() {
         return (
-            <div className="row card">
-                <form id="signInForm" onSubmit={this.onSubmit} className="col card-content s12" >
-                <span className="card-title">Signup</span>
-                    <ul>
-                        {this.state.messages.map(e=>
-                            <li className="red-text">{e}</li>
-                        )}
-                    </ul>
-                    
+           
+                <form id="signupForm" onSubmit={this.onSubmit} >
                     <div className="row">
                         <div className="input-field col s12">
                             <input id="email" type="text" className="validate" name="email"/>
@@ -58,7 +74,7 @@ export default class Signup extends Component {
                         <i className="material-icons right">send</i>
                     </button>
                 </form>
-            </div>
+
         )
     }
 }

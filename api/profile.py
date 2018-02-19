@@ -66,6 +66,15 @@ def add():
         else:
             return jsonify("Profile not saved"), 500
 
+@profile_api.route("/removeProfile")
+@login_required
+def remove():
+    userId, profile = verify()
+
+    result=ProfileModel.deleteProfileById(profile.id)
+    return Response("%s has been deleted"%profile.name)
+
+
 
 
 
@@ -85,20 +94,11 @@ def getProfile():
         try:
 
             sftp=profile.connect()
-            files=[]
             sftp.cwd(".")
             dir=sftp.getcwd()
-            list = sftp.listdir(dir)
-            for item in list:
-                files.append({
-                    'name': item,
-                    'isFile': sftp.isfile(item),
-                    # 'stat':sftp.stat(item)
-                })
-
-            return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir,"files":files}})
+            return jsonify({'profile':{"id":profile.id,'name':profile.name,'homeDir':dir}})
         except Exception as ex:
-            return Response(False)
+            return Response(ex.message),500
     else:
          return jsonify("Invalid profile"),500
 
@@ -106,7 +106,7 @@ def getProfile():
 @login_required
 def openFolder():
 
-    path=request.args["path"]
+    path=request.args["path"] or "."
 
     userId, profile = verify()
     if userId and profile:
@@ -218,7 +218,22 @@ def delete():
 
         except Exception as ex:
             print(ex)
-    return Response("Done")
+    return Response("%s  has been deleted"%path)
+
+@profile_api.route("/mkdir")
+@login_required
+def mkdir():
+    folderName = request.args["path"]
+    userId, profile = verify()
+    if userId and profile:
+        try:
+            sftp = profile.connect()
+            sftp.mkdir(folderName)
+
+
+        except Exception as ex:
+            print(ex)
+    return Response("%s  has been created" %  folderName)
 
 
 def verify():

@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, request, make_response,session
+from flask import Blueprint, request, make_response,session,jsonify
 import re
 from .models.UserModel import UserModel
 
@@ -30,7 +30,7 @@ def signup():
         errorMessages.append("User already exist")
 
     if errorMessages:
-        return json.dumps({"errors":errorMessages}),500
+        return make_response((json.dumps(errorMessages))),500
 
     else:
         newUser=UserModel()
@@ -38,7 +38,7 @@ def signup():
         newUser.set_password(password)
 
         if newUser.save():
-          return json.dumps({"success":True})
+          return make_response((json.dumps("Signup Successful")))
 
 @user_api.route("/login", methods=['POST'])
 def login():
@@ -62,9 +62,17 @@ def login():
        return response
     else:
 
-        return  make_response(json.dumps({"errors": errorMessages}), 500)
+        return  make_response(json.dumps(errorMessages), 500)
 
+@user_api.route("/info")
+def userInfo():
+    userId = session["userId"]
+    user=UserModel.getById(userId)
 
+    if user:
+        return jsonify({
+            "username":user.email
+        })
 
 
 

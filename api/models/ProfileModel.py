@@ -29,6 +29,10 @@ class ProfileModel(BaseModel):
     def getProfilesForUser(userId):
         return ProfileModel.query.filter_by(userId=userId).all()
 
+    @staticmethod
+    def deleteProfileById(id):
+        ProfileModel.query.filter_by(id=id).delete()
+        db.session.commit()
     def connect(self):
         cnopts = CnOpts()
         cnopts.hostkeys = None

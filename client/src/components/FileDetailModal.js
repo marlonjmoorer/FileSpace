@@ -2,7 +2,9 @@ import React from 'react'
 import axios from 'axios'
 import path from 'path'
 
-const FileDetailModal = ({modalId,fileInfo,profileId}) => (
+const FileDetailModal = ({modalId,fileInfo,profileId}) =>{
+    $(`#${modalId}`).modal()
+    return(
     
     <div id={modalId} className="modal">
         {fileInfo&&  
@@ -39,11 +41,12 @@ const FileDetailModal = ({modalId,fileInfo,profileId}) => (
         <div className="modal-footer">
         {
             fileInfo&& fileInfo.isFile &&  
-          <a href="#!"  onClick={download.bind(this,profileId,fileInfo.path)} className="modal-action waves-effect waves-green btn">Download</a>
+          <a onClick={download.bind(this,profileId,fileInfo.path)} className="modal-action waves-effect waves-green btn">Download</a>
         }
         </div>
     </div>
-);
+     )
+}
 const download=async(id,filePath)=>{
    
     
