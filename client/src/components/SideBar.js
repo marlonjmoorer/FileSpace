@@ -85,7 +85,7 @@ class SideBar extends Component {
 
     }
     render() {
-        const {profiles,profile,user}=this.props
+        const {profiles,profile,user,loading}=this.props
         return (
             <div>
                <ProfileModal 
@@ -111,12 +111,17 @@ class SideBar extends Component {
                     </select>
                 </div>
                 <div className="row">
-                    {this.props.loading &&
+                    {loading &&
                         <div className="progress">
                             <div className="indeterminate"></div>
                         </div>}
-                    <a className="waves-effect waves-light btn modal-trigger" data-target={`${this.state.modalId}`}>
-                    <i className="material-icons right">add</i>Add Profile</a>
+                    <a className={(loading?"disabled ":"")+"col m6 s12 waves-effect waves-light btn modal-trigger"} data-target={`${this.state.modalId}`}>
+                        <i className="material-icons right">add</i>Add Profile
+                    </a>
+                    
+                    <a  className={(loading || profiles.length==0 ?"disabled ":"")+"col m6 s12 waves-effect waves-light red btn "}>
+                        <i className="material-icons right">delete</i> Remove Profile
+                    </a>
                    
                 </div>
                 

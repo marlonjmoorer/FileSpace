@@ -1,7 +1,7 @@
 import React from 'react'
 const Loading = () => (
 
-    <div className="window preloader-background black">
+    <div className="explorer preloader-background black">
         <div className="preloader-wrapper big active">
             <div className="spinner-layer spinner-purple-only">
                 <div className="circle-clipper left">
@@ -15,7 +15,7 @@ const Loading = () => (
                 </div>
             </div>
         </div>
-        <p className="blinking white-text">Loading...</p>
+        <p className="white-text">Loading...</p>
     </div>
 
 );

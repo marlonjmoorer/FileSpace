@@ -25,7 +25,7 @@ const Nav = (props) => {
                     { loggedIn &&  
 
                         <li>
-                            <a className="dropdown-button" href="#!" data-activates="dropdown"><i className="material-icons right">arrow_drop_down</i></a>
+                            <a className="dropdown-button" data-activates="dropdown"><i className="material-icons right">arrow_drop_down</i></a>
                         </li>
                     }
                 </ul>

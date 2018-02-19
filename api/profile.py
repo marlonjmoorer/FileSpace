@@ -211,6 +211,21 @@ def delete():
             print(ex)
     return Response("%s  has been deleted"%path)
 
+@profile_api.route("/mkdir")
+@login_required
+def mkdir():
+    folderName = request.args["path"]
+    userId, profile = verify()
+    if userId and profile:
+        try:
+            sftp = profile.connect()
+            sftp.mkdir(folderName)
+
+
+        except Exception as ex:
+            print(ex)
+    return Response("%s  has been created" %  folderName)
+
 
 def verify():
     id = request.args["id"]
